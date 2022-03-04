@@ -2,7 +2,9 @@ package com.example.globalweather.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.NonNull
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -30,13 +32,7 @@ class HourlyAdapter : RecyclerView.Adapter<HourlyAdapter.HourlyViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HourlyViewHolder {
-        return HourlyViewHolder(
-            ItemHourlyBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        )
+     return HourlyViewHolder.create(parent)
     }
 
     override fun onBindViewHolder(holder: HourlyViewHolder, position: Int) {
@@ -47,19 +43,32 @@ class HourlyAdapter : RecyclerView.Adapter<HourlyAdapter.HourlyViewHolder>() {
         return differ.currentList.count()
     }
 
-    inner class HourlyViewHolder(private val binding: ItemHourlyBinding) :
+    class HourlyViewHolder(private val binding: ItemHourlyBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        @SuppressLint("SetTextI18n", "SimpleDateFormat")
-        fun bind(res: ListHourly) {
-            binding.apply {
-                res.run {
-                    txtTempHourly.text = (main.temp.roundToInt() - 273).toString() + " \u00B0"
-                    val input = SimpleDateFormat("yyyy-MM-dd hh:mm")
-                    val output = SimpleDateFormat("h:mm a")
-                    val date: Date = input.parse(dt_txt)
-                    txtTimeHourly.text = output.format(date)
-                    val dateListWeather: List<String> = dt_txt.split(" ")
-                    txtDateHourly.text = dateListWeather[0]
+
+        companion object {
+            fun create(parent: ViewGroup): HourlyViewHolder {
+                val view: ItemHourlyBinding = ItemHourlyBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                return HourlyViewHolder(view)
+            }
+        }
+
+
+    @SuppressLint("SimpleDateFormat", "SetTextI18n")
+    fun bind(res: ListHourly) {
+        binding.apply {
+            res.run {
+                txtTempHourly.text = (main.temp.roundToInt() - 273).toString() + " \u00B0"
+                val input = SimpleDateFormat("yyyy-MM-dd hh:mm")
+                val output = SimpleDateFormat("h:mm a")
+                val date: Date = input.parse(dt_txt)
+                txtTimeHourly.text = output.format(date)
+                val dateListWeather: List<String> = dt_txt.split(" ")
+                txtDateHourly.text = dateListWeather[0]
                     val iconUrl =
                         "http://openweathermap.org/img/w/" + weather[0].icon + ".png";
 

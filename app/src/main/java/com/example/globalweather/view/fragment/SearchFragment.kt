@@ -1,6 +1,8 @@
 package com.example.globalweather.view.fragment
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
@@ -23,8 +25,7 @@ class SearchFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?): View {
+        container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -40,7 +41,31 @@ class SearchFragment : Fragment() {
         showLoading()
         initRecyclerView()
         getAllCity()
+        binding.edtSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
+            }
+
+            override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (charSequence!!.isNotEmpty()) {
+                    viewModel.searchQuery.value = charSequence.toString()
+                    viewModel.searchCities().observe(viewLifecycleOwner) {
+                        cityAdapter.differ.submitList(it)
+                    }
+                } else {
+                    lifecycleScope.launchWhenCreated {
+                        viewModel.getAllCity().observe(viewLifecycleOwner) {
+                            hideLoading()
+                            cityAdapter.differ.submitList(it)
+                        }
+                    }
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
     }
 
 

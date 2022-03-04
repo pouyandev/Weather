@@ -29,14 +29,10 @@ class DailyAdapter() : RecyclerView.Adapter<DailyAdapter.DailyViewHolder>() {
 
     }
     val differ = AsyncListDiffer(this, differCallback)
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DailyViewHolder {
-        return DailyViewHolder(
-            ItemDailyBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        )
+        return DailyViewHolder.create(parent)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -48,8 +44,20 @@ class DailyAdapter() : RecyclerView.Adapter<DailyAdapter.DailyViewHolder>() {
         return differ.currentList.count()
     }
 
-    inner class DailyViewHolder(private val binding: ItemDailyBinding) :
+    class DailyViewHolder(private val binding: ItemDailyBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        companion object {
+            fun create(parent: ViewGroup): DailyViewHolder {
+                val view: ItemDailyBinding = ItemDailyBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                return DailyViewHolder(view)
+            }
+        }
+
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(res: ListDaily) {
             binding.apply {

@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.globalweather.di.application.HiltApplication
 import com.example.globalweather.di.application.HiltApplication.Companion.AppContext
 import com.example.globalweather.model.constant.City
 import com.example.globalweather.repository.WeatherRepository
@@ -17,9 +18,9 @@ import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.text.Charsets.UTF_8
 
@@ -29,31 +30,37 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
 
     private var job: Job? = null
     private lateinit var cities: MutableList<City>
-/*    private val cityList: MutableLiveData<MutableList<City>> = MutableLiveData()*/
+    private val cityList: MutableLiveData<MutableList<City>> = MutableLiveData()
 
 
     val searchQuery = MutableStateFlow("")
 
     init {
-        getData()
+       //getData()
     }
 
 
     fun getData() {
-        job = viewModelScope.async(Default) {
-          val c1 = async {
-              val inputStream = AppContext.assets.open(JSON_FILE)
-              val size = inputStream.available()
-              val buffer = ByteArray(size)
-              inputStream.read(buffer)
-              inputStream.close()
-              val json = String(buffer, UTF_8)
+        job = viewModelScope.launch(IO) {
+            async {
+                val inputStream = AppContext.assets.open(JSON_FILE)
+                val size = inputStream.available()
+                val buffer = ByteArray(size)
+                inputStream.read(buffer)
+                inputStream.close()
+                val json = String(buffer, UTF_8)
 
-              cities = GsonBuilder().create().fromJson(json, object : TypeToken<MutableList<City>>() {}.type) }
-            val c2 = async { repository.upserts(cities) }
+                cities = GsonBuilder().create()
+                    .fromJson(json, object : TypeToken<MutableList<City>>() {}.type)
 
-            c1.await()
-            c2.await()
+                for (city in cities) {
+                    if (city.country == "IR") {
+                        HiltApplication.cities.add(city)
+                    }
+                }
+            }.await()
+
+            async { repository.upserts(cities = HiltApplication.cities) }.await()
         }
 
 
@@ -72,19 +79,21 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
 
     fun searchCities() = searchCity().asLiveData(IO)
 
-    suspend fun getCurrent() = repository.getCurrentData(CITY_NAME, API_KEY).asLiveData()
+    suspend fun getCurrent() = repository.getCurrentData(CITY_NAME, API_KEY).asLiveData(IO)
 
-    suspend fun getHourly() = repository.getHourlyData(CITY_NAME, API_KEY).asLiveData()
+    suspend fun getHourly() = repository.getHourlyData(CITY_NAME, API_KEY).asLiveData(IO)
 
-    suspend fun getDaily() = repository.getDailyData(CITY_NAME, API_KEY).asLiveData()
+    suspend fun getDaily() = repository.getDailyData(CITY_NAME, API_KEY).asLiveData(IO)
 
     suspend fun getAllCity() = repository.getCities().asLiveData(IO)
 
 
+/*
     override fun onCleared() {
         super.onCleared()
         job!!.cancel()
         job = null
     }
+*/
 
 }

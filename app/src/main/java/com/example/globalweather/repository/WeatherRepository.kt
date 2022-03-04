@@ -22,7 +22,7 @@ class WeatherRepository @Inject constructor(
 
     suspend fun getDailyData(city: String, appid: String) = flow { emit(api.getDailyData(city, appid)) }
 
-    suspend fun getCities() = flow {emit(dao.getAllCity() ) }.flowOn(Default)
+    suspend fun getCities() = flow {emit(dao.getAllCity() ) }
 
     suspend fun upserts(cities: MutableList<City>) = dao.upserts(cities)
 
