@@ -59,9 +59,7 @@ class DailyAdapter() : RecyclerView.Adapter<DailyAdapter.DailyViewHolder>() {
                     txtDateDaily.text = Instant.ofEpochSecond(dt.toLong())
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate()
-                        .format(
-                            DateTimeFormatter.ofPattern("EEEE")
-                        )
+                        .format(DateTimeFormatter.ofPattern("EEEE"))
                     val iconUrl =
                         "http://openweathermap.org/img/w/" + weather[0].icon + ".png"
 
