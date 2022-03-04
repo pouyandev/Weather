@@ -98,29 +98,3 @@ class SearchFragment : Fragment() {
 
 
 }
-
-/*        binding.edtSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (charSequence!!.isNotEmpty()) {
-                    viewModel.searchQuery.value = charSequence.toString()
-                    viewModel.searchCities().observe(viewLifecycleOwner) {
-                        cityAdapter.differ.submitList(it)
-                    }
-                } else {
-                    lifecycleScope.launchWhenCreated {
-                        viewModel.getAllCity().observe(viewLifecycleOwner) {
-                            hideLoading()
-                            cityAdapter.differ.submitList(it)
-                        }
-                    }
-                }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
-        })*/

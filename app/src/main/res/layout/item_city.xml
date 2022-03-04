@@ -31,16 +31,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Dezful" />
 
-    <TextView
-        android:id="@+id/txt_country_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="@dimen/_12ssp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/txt_city_name"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="IR" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

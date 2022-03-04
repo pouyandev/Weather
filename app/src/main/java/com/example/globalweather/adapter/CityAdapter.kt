@@ -21,6 +21,7 @@ class CityAdapter : RecyclerView.Adapter<CityAdapter.CityViewHolder>() {
 
     }
     val differ = AsyncListDiffer(this, differCallback)
+    private var onItemClickListener: ((City) -> Unit)? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityViewHolder {
         return CityViewHolder(
             ItemCityBinding.inflate(
@@ -39,13 +40,23 @@ class CityAdapter : RecyclerView.Adapter<CityAdapter.CityViewHolder>() {
         return differ.currentList.count()
     }
 
+
+    fun setOnItemClickListener(listener: (City) -> Unit) {
+        onItemClickListener = listener
+    }
+
+
     inner class CityViewHolder(private val binding: ItemCityBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
         fun bind(city: City) {
             binding.apply {
-                txtCityName.text = city.name + " , "
-                txtCountryName.text = city.country
+                txtCityName.text = city.name
+            }
+            itemView.setOnClickListener {
+                onItemClickListener?.let {
+                    it(city)
+                }
             }
 
         }

@@ -73,7 +73,6 @@ class DailyAdapter() : RecyclerView.Adapter<DailyAdapter.DailyViewHolder>() {
 
                     imgIconDaily.load(iconUrl) {
                         crossfade(true)
-                        crossfade(500)
                         allowConversionToBitmap(true)
                         diskCachePolicy(CachePolicy.ENABLED)
                         allowHardware(true)

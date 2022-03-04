@@ -1,14 +1,14 @@
 package com.example.globalweather.repository
 
+import androidx.annotation.WorkerThread
 import androidx.room.Query
 import com.example.globalweather.model.constant.City
 import com.example.globalweather.network.WeatherApi
 import com.example.globalweather.room.WeatherDao
 
-import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.Dispatchers.IO
+
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+
 import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(
@@ -22,12 +22,20 @@ class WeatherRepository @Inject constructor(
 
     suspend fun getDailyData(city: String, appid: String) = flow { emit(api.getDailyData(city, appid)) }
 
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
     suspend fun getCities() = flow {emit(dao.getAllCity() ) }
 
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
     suspend fun upserts(cities: MutableList<City>) = dao.upserts(cities)
 
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
     suspend fun upsert(city: City) =  dao.upsert(city)
 
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
     fun searchCity(query: String?) = dao.search(query)
 
 

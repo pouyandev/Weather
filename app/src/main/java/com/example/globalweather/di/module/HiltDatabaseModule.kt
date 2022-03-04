@@ -15,12 +15,10 @@ import javax.inject.Singleton
 object HiltDatabaseModule {
     @Provides
     @Singleton
-    fun provideAppDatabase(@ApplicationContext context: Context): WeatherDatabase =
-        WeatherDatabase.invoke(context)
+    fun provideAppDatabase(@ApplicationContext context: Context): WeatherDatabase = WeatherDatabase.invoke(context)
 
 
     @Provides
     @Singleton
-    fun provideRoomDao(weatherDatabase: WeatherDatabase): WeatherDao =
-        weatherDatabase.getWeatherDao()
+    fun provideRoomDao(weatherDatabase: WeatherDatabase): WeatherDao = weatherDatabase.getWeatherDao()
 }

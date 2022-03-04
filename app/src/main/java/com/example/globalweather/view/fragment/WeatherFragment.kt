@@ -158,8 +158,6 @@ class WeatherFragment : Fragment() {
 
                         imgIconMain.load(iconUrl) {
                             crossfade(true)
-                            crossfade(500)
-                            crossfade(true)
                             allowConversionToBitmap(true)
                             diskCachePolicy(CachePolicy.ENABLED)
                             allowHardware(true)

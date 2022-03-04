@@ -74,7 +74,6 @@ class HourlyAdapter : RecyclerView.Adapter<HourlyAdapter.HourlyViewHolder>() {
 
                     imgIconHourly.load(iconUrl) {
                         crossfade(true)
-                        crossfade(500)
                         allowHardware(true)
                         allowConversionToBitmap(true)
                         diskCachePolicy(CachePolicy.ENABLED)

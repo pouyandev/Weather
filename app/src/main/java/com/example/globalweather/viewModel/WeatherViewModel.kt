@@ -8,8 +8,10 @@ import com.example.globalweather.di.application.HiltApplication
 import com.example.globalweather.di.application.HiltApplication.Companion.AppContext
 import com.example.globalweather.model.constant.City
 import com.example.globalweather.repository.WeatherRepository
+import com.example.globalweather.utils.Constants
 import com.example.globalweather.utils.Constants.API_KEY
 import com.example.globalweather.utils.Constants.CITY_NAME
+import com.example.globalweather.utils.Constants.COUNTRY_ID
 import com.example.globalweather.utils.Constants.JSON_FILE
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -36,12 +38,12 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     val searchQuery = MutableStateFlow("")
 
     init {
-       //getData()
+       getData()
     }
 
 
     fun getData() {
-        job = viewModelScope.launch(IO) {
+        job = viewModelScope.async(IO) {
             async {
                 val inputStream = AppContext.assets.open(JSON_FILE)
                 val size = inputStream.available()
@@ -54,7 +56,7 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
                     .fromJson(json, object : TypeToken<MutableList<City>>() {}.type)
 
                 for (city in cities) {
-                    if (city.country == "IR") {
+                    if (city.country == COUNTRY_ID) {
                         HiltApplication.cities.add(city)
                     }
                 }
@@ -88,12 +90,10 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     suspend fun getAllCity() = repository.getCities().asLiveData(IO)
 
 
-/*
     override fun onCleared() {
         super.onCleared()
         job!!.cancel()
         job = null
     }
-*/
 
 }
