@@ -8,7 +8,7 @@ import com.example.globalweather.di.application.HiltApplication
 import com.example.globalweather.di.application.HiltApplication.Companion.AppContext
 import com.example.globalweather.model.constant.City
 import com.example.globalweather.repository.WeatherRepository
-import com.example.globalweather.utils.Constants
+
 import com.example.globalweather.utils.Constants.API_KEY
 import com.example.globalweather.utils.Constants.CITY_NAME
 import com.example.globalweather.utils.Constants.COUNTRY_ID
@@ -22,7 +22,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.text.Charsets.UTF_8
 
@@ -38,7 +37,7 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     val searchQuery = MutableStateFlow("")
 
     init {
-       getData()
+   //    getData()
     }
 
 
@@ -81,19 +80,21 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
 
     fun searchCities() = searchCity().asLiveData(IO)
 
-    suspend fun getCurrent() = repository.getCurrentData(CITY_NAME, API_KEY).asLiveData(IO)
+    suspend fun getCurrent(city: String) = repository.getCurrentData(city, API_KEY).asLiveData(IO)
 
-    suspend fun getHourly() = repository.getHourlyData(CITY_NAME, API_KEY).asLiveData(IO)
+    suspend fun getHourly(city: String) = repository.getHourlyData(city, API_KEY).asLiveData(IO)
 
-    suspend fun getDaily() = repository.getDailyData(CITY_NAME, API_KEY).asLiveData(IO)
+    suspend fun getDaily(city: String) = repository.getDailyData(city, API_KEY).asLiveData(IO)
 
     suspend fun getAllCity() = repository.getCities().asLiveData(IO)
 
 
+/*
     override fun onCleared() {
         super.onCleared()
         job!!.cancel()
         job = null
     }
+*/
 
 }

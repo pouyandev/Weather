@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import coil.load
@@ -38,7 +39,7 @@ class WeatherFragment : Fragment() {
     private val viewModel: WeatherViewModel by viewModels()
     private val hourlyAdapter by lazy { HourlyAdapter() }
     private val dailyAdapter by lazy { DailyAdapter() }
-/*    val args: WeatherFragmentArgs by navArgs()*/
+    private val args: SearchFragmentArgs by navArgs()
 
     @RequiresApi(Build.VERSION_CODES.O)
     val formatter: DateTimeFormatter = DateTimeFormatter
@@ -56,8 +57,7 @@ class WeatherFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
+       /* findNavController().navigate(R.id.action_weatherFragment_to_searchFragment)*/
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -69,7 +69,6 @@ class WeatherFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun init() {
-        /*       val weather = args.parWeather*/
         currentDetail()
         forecastHourlyDetail()
         forecastDailyDetail()
@@ -90,7 +89,7 @@ class WeatherFragment : Fragment() {
 
     private fun forecastDailyDetail() {
         lifecycleScope.launchWhenCreated {
-            viewModel.getDaily().observe(viewLifecycleOwner) {
+            viewModel.getDaily(city = args.pCityName.name).observe(viewLifecycleOwner) {
                 hideLoading()
                 initDailyRecyclerView()
                 dailyAdapter.differ.submitList(it.list)
@@ -101,7 +100,7 @@ class WeatherFragment : Fragment() {
 
     private fun forecastHourlyDetail() {
         lifecycleScope.launchWhenCreated {
-            viewModel.getHourly().observe(viewLifecycleOwner) {
+            viewModel.getHourly(city = args.pCityName.name).observe(viewLifecycleOwner) {
                 hideLoading()
                 initHourlyRecyclerView()
                 hourlyAdapter.differ.submitList(it.list)
@@ -115,7 +114,7 @@ class WeatherFragment : Fragment() {
     private fun currentDetail() {
         hideLoading()
         lifecycleScope.launchWhenCreated {
-            viewModel.getCurrent().observe(viewLifecycleOwner) {
+            viewModel.getCurrent(city = args.pCityName.name).observe(viewLifecycleOwner) {
                 binding.apply {
                     it.run {
                         txtCityName.text = name
@@ -158,6 +157,7 @@ class WeatherFragment : Fragment() {
 
                         imgIconMain.load(iconUrl) {
                             crossfade(true)
+                            crossfade(100)
                             allowConversionToBitmap(true)
                             diskCachePolicy(CachePolicy.ENABLED)
                             allowHardware(true)

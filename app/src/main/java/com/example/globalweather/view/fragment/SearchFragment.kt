@@ -11,7 +11,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.globalweather.R
 import com.example.globalweather.adapter.CityAdapter
 import com.example.globalweather.databinding.FragmentSearchBinding
 import com.example.globalweather.viewModel.WeatherViewModel
@@ -30,6 +32,11 @@ class SearchFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+    }
+
 
     override fun onStart() {
         super.onStart()
@@ -39,6 +46,13 @@ class SearchFragment : Fragment() {
 
     private fun init() {
         showLoading()
+        cityAdapter.setOnItemClickListener {
+            val bundle = Bundle().apply {
+                putParcelable("pCityName", it)
+            }
+            findNavController().navigate(R.id.action_searchFragment_to_weatherFragment, bundle)
+
+        }
         initRecyclerView()
         getAllCity()
         binding.edtSearch.addTextChangedListener(object : TextWatcher {

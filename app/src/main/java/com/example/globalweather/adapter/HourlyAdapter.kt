@@ -2,9 +2,7 @@ package com.example.globalweather.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.NonNull
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -48,12 +46,14 @@ class HourlyAdapter : RecyclerView.Adapter<HourlyAdapter.HourlyViewHolder>() {
 
         companion object {
             fun create(parent: ViewGroup): HourlyViewHolder {
-                val view: ItemHourlyBinding = ItemHourlyBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
+                return HourlyViewHolder(
+                    ItemHourlyBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
                 )
-                return HourlyViewHolder(view)
+
             }
         }
 
@@ -74,6 +74,7 @@ class HourlyAdapter : RecyclerView.Adapter<HourlyAdapter.HourlyViewHolder>() {
 
                     imgIconHourly.load(iconUrl) {
                         crossfade(true)
+                        crossfade(100)
                         allowHardware(true)
                         allowConversionToBitmap(true)
                         diskCachePolicy(CachePolicy.ENABLED)

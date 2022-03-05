@@ -49,12 +49,13 @@ class DailyAdapter() : RecyclerView.Adapter<DailyAdapter.DailyViewHolder>() {
 
         companion object {
             fun create(parent: ViewGroup): DailyViewHolder {
-                val view: ItemDailyBinding = ItemDailyBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
+                return DailyViewHolder(
+                    ItemDailyBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
                 )
-                return DailyViewHolder(view)
             }
         }
 
@@ -73,6 +74,7 @@ class DailyAdapter() : RecyclerView.Adapter<DailyAdapter.DailyViewHolder>() {
 
                     imgIconDaily.load(iconUrl) {
                         crossfade(true)
+                        crossfade(100)
                         allowConversionToBitmap(true)
                         diskCachePolicy(CachePolicy.ENABLED)
                         allowHardware(true)

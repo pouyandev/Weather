@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/weather_nav"
-    app:startDestination="@id/weatherFragment">
+    app:startDestination="@id/searchFragment">
 
     <fragment
         android:id="@+id/weatherFragment"
@@ -11,17 +11,24 @@
         android:label="fragment_weather"
         tools:layout="@layout/fragment_weather" >
         <action
-            android:id="@+id/action_weatherFragment_to_searchFragment"
-            app:destination="@id/searchFragment" />
-        <action
             android:id="@+id/action_weatherFragment_to_favoriteFragment"
             app:destination="@id/favoriteFragment" />
+        <action
+            android:id="@+id/action_weatherFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.globalweather.view.fragment.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_weatherFragment"
+            app:destination="@id/weatherFragment" />
+        <argument
+            android:name="pCityName"
+            app:argType="com.example.globalweather.model.constant.City" />
+    </fragment>
     <fragment
         android:id="@+id/favoriteFragment"
         android:name="com.example.globalweather.view.fragment.FavoriteFragment"
