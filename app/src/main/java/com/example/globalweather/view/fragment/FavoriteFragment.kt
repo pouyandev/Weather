@@ -7,7 +7,10 @@ import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.globalweather.adapter.FavoriteAdapter
 import com.example.globalweather.databinding.FragmentFavoriteBinding
 import com.example.globalweather.viewModel.WeatherViewModel
@@ -17,8 +20,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class FavoriteFragment : Fragment() {
 
     private lateinit var binding: FragmentFavoriteBinding
-    private val viewModel: WeatherViewModel by viewModels()
+    private val viewModel: WeatherViewModel by activityViewModels()
     private val favoriteAdapter by lazy { FavoriteAdapter() }
+
 
 
     override fun onCreateView(
@@ -32,13 +36,26 @@ class FavoriteFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         init()
+
     }
 
     private fun init() {
         showLoading()
+        initRecyclerView()
+        lifecycleScope.launchWhenCreated {
+            viewModel.getAllFavoriteCity().observe(viewLifecycleOwner) {
+                hideLoading()
+                favoriteAdapter.differ.submitList(it)
+            }
+        }
+    }
 
-
-
+    private fun initRecyclerView() {
+        binding.rclFavorite.apply {
+            layoutManager = GridLayoutManager(requireContext(),2)
+            adapter = favoriteAdapter
+            hasFixedSize()
+        }
     }
 
     private fun showLoading() {

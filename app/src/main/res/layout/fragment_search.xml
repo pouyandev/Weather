@@ -10,13 +10,15 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_30sdp"
-        android:layout_margin="@dimen/_30sdp"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:layout_marginStart="@dimen/_15sdp"
+        android:layout_marginEnd="@dimen/_15sdp"
         android:background="@drawable/bg_search"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/search_city_icon_searchActivity"
             android:layout_width="@dimen/_15sdp"
             android:layout_height="@dimen/_15sdp"
@@ -27,7 +29,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/gray" />
 
-        <EditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/edt_search"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -48,12 +50,14 @@
         android:id="@+id/rcl_cities"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="@dimen/_5sdp"
+        android:layout_marginEnd="@dimen/_5sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
-    <ProgressBar
+    <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/prg_search"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"

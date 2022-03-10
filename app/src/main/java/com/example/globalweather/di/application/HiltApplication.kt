@@ -2,7 +2,6 @@ package com.example.globalweather.di.application
 
 import android.app.Application
 import android.content.Context
-import android.os.Handler
 import com.example.globalweather.model.constant.City
 import dagger.hilt.android.HiltAndroidApp
 
@@ -12,10 +11,11 @@ class HiltApplication : Application() {
         super.onCreate()
 
         AppContext = applicationContext
-        cities= ArrayList()
+        cities = ArrayList()
 
 
     }
+
 
     companion object {
         lateinit var AppContext: Context

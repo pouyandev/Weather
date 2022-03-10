@@ -8,8 +8,9 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,23 +19,38 @@ import com.example.globalweather.adapter.CityAdapter
 import com.example.globalweather.databinding.FragmentSearchBinding
 import com.example.globalweather.viewModel.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
-    private val viewModel: WeatherViewModel by viewModels()
+    private val viewModel: WeatherViewModel by activityViewModels()
     private val cityAdapter by lazy { CityAdapter() }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+ /*       // This callback will only be called when MyFragment is at least Started.
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                   requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback);
+
+        // The callback can be enabled or disabled here or in handleOnBackPressed()*/
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
-        container: ViewGroup?, savedInstanceState: Bundle?): View {
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
     }
 
 
@@ -44,6 +60,7 @@ class SearchFragment : Fragment() {
     }
 
 
+    @ExperimentalCoroutinesApi
     private fun init() {
         showLoading()
         cityAdapter.setOnItemClickListener {
@@ -51,6 +68,8 @@ class SearchFragment : Fragment() {
                 putParcelable("pCityName", it)
             }
             findNavController().navigate(R.id.action_searchFragment_to_weatherFragment, bundle)
+
+
 
         }
         initRecyclerView()
@@ -85,13 +104,11 @@ class SearchFragment : Fragment() {
 
     private fun getAllCity() {
         lifecycleScope.launchWhenCreated {
+            hideLoading()
             viewModel.getAllCity().observe(viewLifecycleOwner) {
-                hideLoading()
                 cityAdapter.differ.submitList(it)
             }
         }
-
-
     }
 
     private fun initRecyclerView() {

@@ -4,11 +4,11 @@ package com.example.globalweather.model.constant
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.globalweather.model.constant.Coord
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-
 @Entity(tableName = "city_tbl")
 data class City(
     @PrimaryKey(autoGenerate = true)

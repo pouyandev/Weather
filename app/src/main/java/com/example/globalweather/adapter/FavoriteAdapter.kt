@@ -8,17 +8,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.request.CachePolicy
-import com.example.globalweather.databinding.ItemCityBinding
 import com.example.globalweather.databinding.ItemFavoriteBinding
-import com.example.globalweather.model.constant.City
+import com.example.globalweather.room.entity.Favorite
 
 class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>() {
-    private val differCallback = object : DiffUtil.ItemCallback<City>() {
-        override fun areItemsTheSame(oldItem: City, newItem: City): Boolean {
+    private val differCallback = object : DiffUtil.ItemCallback<Favorite>() {
+        override fun areItemsTheSame(oldItem: Favorite, newItem: Favorite): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: City, newItem: City): Boolean {
+        override fun areContentsTheSame(oldItem: Favorite, newItem: Favorite): Boolean {
             return oldItem == newItem
         }
 
@@ -45,19 +44,19 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>
     inner class FavoriteViewHolder(private val binding: ItemFavoriteBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
-        fun bind(city: City) {
+        fun bind(favorite: Favorite) {
             binding.apply {
-                txtCityFavorite.text =city.name + " , "
-                txtCountryFavorite.text = city.country
-        /*        txtTempFavorite.text = s.main.temp.toString()
-                imgIconFavorite.load(s.weather.icon) {
+                txtCityFavorite.text =favorite.cityName
+                txtCountryFavorite.text = favorite.countryName.toString()
+                txtTempFavorite.text = favorite.main!!.toString()
+                imgIconFavorite.load(favorite.weather!!) {
                     crossfade(true)
                     crossfade(500)
-                    crossfade(true)
+
                     allowConversionToBitmap(true)
                     diskCachePolicy(CachePolicy.ENABLED)
                     allowHardware(true)
-                }*/
+                }
 
             }
 

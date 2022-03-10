@@ -2,14 +2,11 @@ package com.example.globalweather.room.converter
 
 
 import androidx.room.TypeConverter
-import com.example.globalweather.model.constant.City
 import com.example.globalweather.model.constant.Coord
-import com.example.globalweather.model.constant.Main
-import com.example.globalweather.model.constant.Weather
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class WeatherConverter {
+class CityConverter {
 
 
     @TypeConverter
