@@ -31,6 +31,7 @@ abstract class FavoriteDatabase : RoomDatabase() {
                 context,
                 FavoriteDatabase::class.java,
                 "favorite_db.db")
+                .fallbackToDestructiveMigration()
                 .build()
     }
 

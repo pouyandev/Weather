@@ -5,4 +5,5 @@ object Constants {
     const val BASE_URL = "https://api.openweathermap.org"
     const val COUNTRY_ID = "IR"
     const val JSON_FILE = "city.list.json"
+    const val PREFERENCES_NAME = "city_name_preferences"
 }

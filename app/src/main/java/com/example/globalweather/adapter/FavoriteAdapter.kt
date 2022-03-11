@@ -52,7 +52,6 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>
                 imgIconFavorite.load(favorite.weather!!) {
                     crossfade(true)
                     crossfade(500)
-
                     allowConversionToBitmap(true)
                     diskCachePolicy(CachePolicy.ENABLED)
                     allowHardware(true)

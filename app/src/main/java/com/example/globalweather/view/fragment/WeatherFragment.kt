@@ -204,7 +204,7 @@ class WeatherFragment : Fragment() {
     private fun initHourlyRecyclerView() {
         binding.rclForecastHourly.apply {
             layoutManager = LinearLayoutManager(
-                activity, HORIZONTAL, false
+                requireContext(), HORIZONTAL, false
             )
             adapter = hourlyAdapter
             hasFixedSize()
@@ -214,7 +214,7 @@ class WeatherFragment : Fragment() {
 
     private fun initDailyRecyclerView() {
         binding.rclForecastDaily.apply {
-            layoutManager = LinearLayoutManager(activity)
+            layoutManager = LinearLayoutManager(requireContext())
             adapter = dailyAdapter
             hasFixedSize()
         }

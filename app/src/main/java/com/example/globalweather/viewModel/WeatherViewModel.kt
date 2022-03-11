@@ -36,7 +36,7 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     val searchQuery = MutableStateFlow("")
 
     init {
-        //   convertJsonAndUpsert()
+         // convertJsonAndUpsert()
     }
 
 
@@ -54,6 +54,13 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
         job = viewModelScope.async(IO) {
             val add = async { repository.fInsert(favorite) }
             add.await()
+        }
+    }
+
+    fun deleteFavoriteCity(favorite: Favorite){
+        job = viewModelScope.async(IO) {
+            val delete = async { repository.deleteFavorite(favorite) }
+            delete.await()
         }
     }
 

@@ -1,7 +1,10 @@
 package com.example.globalweather.repository
 
 
+import android.content.Context
 import androidx.annotation.WorkerThread
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.example.globalweather.model.constant.City
 import com.example.globalweather.network.WeatherApi
 import com.example.globalweather.room.database.city.CityDao
@@ -15,6 +18,8 @@ class WeatherRepository @Inject constructor(
     private val cityDao: CityDao,
     private val favoriteDao: FavoriteDao
 ) {
+
+/*    private val dataStore:DataStore<Preferences> = context.creada*/
 
     suspend fun getCurrentData(city: String, appid: String) =
         flow { emit(api.getCurrentData(city, appid)) }
@@ -44,5 +49,9 @@ class WeatherRepository @Inject constructor(
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
     suspend fun getAllCityFavorite() = flow { emit(favoriteDao.getAllCityFavorite()) }
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun deleteFavorite(favorite: Favorite) = favoriteDao.deleteFavoriteCity(favorite)
 
 }
