@@ -20,6 +20,7 @@ import com.example.globalweather.databinding.FragmentSearchBinding
 import com.example.globalweather.viewModel.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
 
 
 @AndroidEntryPoint
@@ -68,9 +69,6 @@ class SearchFragment : Fragment() {
                 putParcelable("pCityName", it)
             }
             findNavController().navigate(R.id.action_searchFragment_to_weatherFragment, bundle)
-
-
-
         }
         initRecyclerView()
         getAllCity()
@@ -87,7 +85,7 @@ class SearchFragment : Fragment() {
                     }
                 } else {
                     lifecycleScope.launchWhenCreated {
-                        viewModel.getAllCity().observe(viewLifecycleOwner) {
+                        viewModel.getAllCity().collectLatest {
                             hideLoading()
                             cityAdapter.differ.submitList(it)
                         }
@@ -105,7 +103,7 @@ class SearchFragment : Fragment() {
     private fun getAllCity() {
         lifecycleScope.launchWhenCreated {
             hideLoading()
-            viewModel.getAllCity().observe(viewLifecycleOwner) {
+            viewModel.getAllCity().collectLatest {
                 cityAdapter.differ.submitList(it)
             }
         }

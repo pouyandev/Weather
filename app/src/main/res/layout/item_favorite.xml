@@ -3,12 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/_110sdp"
-    android:layout_height="@dimen/_110sdp"
-    android:layout_marginStart="@dimen/_20sdp"
-    android:layout_marginTop="@dimen/_10sdp"
-
+    android:layout_height="@dimen/_100sdp"
+    android:layout_margin="@dimen/_10sdp"
     app:cardCornerRadius="@dimen/_15sdp"
-    app:cardElevation="@dimen/_10sdp">
+    app:cardElevation="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -18,8 +16,8 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/txt_temp_favorite"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_marginStart="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_15sdp"
             android:gravity="center"
             android:textColor="@color/white"
@@ -30,11 +28,11 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_icon_favorite"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:padding="@dimen/_1sdp"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
             android:layout_marginTop="@dimen/_15sdp"
-            android:layout_marginEnd="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:padding="@dimen/_1sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_search" />
@@ -45,7 +43,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginTop="@dimen/_35sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:maxLength="15"
             android:textColor="@color/white"
             android:textSize="@dimen/_11ssp"
             android:textStyle="bold"
@@ -58,6 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
             android:textColor="@color/gray"
             android:textSize="@dimen/_10ssp"
             android:textStyle="bold"
@@ -66,17 +66,6 @@
             app:layout_constraintTop_toBottomOf="@+id/txt_city_favorite"
             tools:text="Ukraine" />
 
-       <!-- <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/img_icon_delete_favorite"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:layout_marginBottom="@dimen/_15sdp"
-            android:layout_marginEnd="@dimen/_8sdp"
-            android:padding="@dimen/_5sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:src="@drawable/ic_trash" />
--->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

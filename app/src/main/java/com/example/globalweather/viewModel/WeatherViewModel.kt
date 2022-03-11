@@ -36,7 +36,7 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     val searchQuery = MutableStateFlow("")
 
     init {
-         // convertJsonAndUpsert()
+        //  convertJsonAndUpsert()
     }
 
 
@@ -90,15 +90,15 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     @ExperimentalCoroutinesApi
     fun searchCities() = searchCity().asLiveData(IO)
 
-    suspend fun getCurrent(city: String) = repository.getCurrentData(city, API_KEY).asLiveData(IO)
+    suspend fun getCurrent(city: String) = repository.getCurrentData(city, API_KEY)
 
-    suspend fun getHourly(city: String) = repository.getHourlyData(city, API_KEY).asLiveData(IO)
+    suspend fun getHourly(city: String) = repository.getHourlyData(city, API_KEY)
 
-    suspend fun getDaily(city: String) = repository.getDailyData(city, API_KEY).asLiveData(IO)
+    suspend fun getDaily(city: String) = repository.getDailyData(city, API_KEY)
 
-    suspend fun getAllCity() = repository.getCities().asLiveData(IO)
+    suspend fun getAllCity() = repository.getCities()
 
-    suspend fun getAllFavoriteCity() = repository.getAllCityFavorite().asLiveData(IO)
+    suspend fun getAllFavoriteCity() = repository.getAllCityFavorite()
 
     override fun onCleared() {
         super.onCleared()

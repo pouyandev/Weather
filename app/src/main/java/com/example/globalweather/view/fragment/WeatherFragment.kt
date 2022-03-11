@@ -8,7 +8,6 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -27,6 +26,7 @@ import com.example.globalweather.room.entity.Favorite
 import com.example.globalweather.viewModel.WeatherViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -72,9 +72,28 @@ class WeatherFragment : Fragment() {
         currentDetail()
         forecastHourlyDetail()
         forecastDailyDetail()
+        showAndHideFab()
+        actionSearchAndFavorite()
+    }
 
+    private fun actionSearchAndFavorite() {
 
+        binding.apply {
+            imgSearchMain.setOnClickListener {
+                findNavController().navigate(R.id.action_weatherFragment_to_searchFragment)
+            }
+            imgFavoriteMain.setOnClickListener {
+                viewModel.addFavoriteCity(favorite!!)
+                Snackbar.make(view, "Selected city added successfully", Snackbar.LENGTH_SHORT)
+                    .show()
+            }
+            fab.setOnClickListener {
+                findNavController().navigate(R.id.action_weatherFragment_to_favoriteFragment)
+            }
+        }
+    }
 
+    private fun showAndHideFab() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             binding.apply {
                 scrollMain.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
@@ -93,26 +112,11 @@ class WeatherFragment : Fragment() {
                 }
             }
         }
-
-
-        binding.apply {
-            imgSearchMain.setOnClickListener {
-                findNavController().navigate(R.id.action_weatherFragment_to_searchFragment)
-            }
-            imgFavoriteMain.setOnClickListener {
-                viewModel.addFavoriteCity(favorite!!)
-                Snackbar.make(view, "Selected city added successfully", Snackbar.LENGTH_SHORT)
-                    .show()
-            }
-            fab.setOnClickListener {
-                findNavController().navigate(R.id.action_weatherFragment_to_favoriteFragment)
-            }
-        }
     }
 
     private fun forecastDailyDetail() {
         lifecycleScope.launchWhenCreated {
-            viewModel.getDaily(city = searchArgs.pCityName.name).observe(viewLifecycleOwner) {
+            viewModel.getDaily(city = searchArgs.pCityName.name).collectLatest {
                 hideLoading()
                 initDailyRecyclerView()
                 dailyAdapter.differ.submitList(it.list)
@@ -124,7 +128,7 @@ class WeatherFragment : Fragment() {
     private fun forecastHourlyDetail() {
         lifecycleScope.launchWhenCreated {
             hideLoading()
-            viewModel.getHourly(city = searchArgs.pCityName.name).observe(viewLifecycleOwner) {
+            viewModel.getHourly(city = searchArgs.pCityName.name).collectLatest {
                 hideLoading()
                 initHourlyRecyclerView()
                 hourlyAdapter.differ.submitList(it.list)
@@ -138,7 +142,7 @@ class WeatherFragment : Fragment() {
     private fun currentDetail() {
         lifecycleScope.launchWhenCreated {
             hideLoading()
-            viewModel.getCurrent(city = searchArgs.pCityName.name).observe(viewLifecycleOwner) {
+            viewModel.getCurrent(city = searchArgs.pCityName.name).collectLatest {
                 binding.apply {
                     it.run {
                         txtCityName.text = name

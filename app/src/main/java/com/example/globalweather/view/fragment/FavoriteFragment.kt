@@ -17,6 +17,7 @@ import com.example.globalweather.databinding.FragmentFavoriteBinding
 import com.example.globalweather.viewModel.WeatherViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class FavoriteFragment : Fragment() {
@@ -49,7 +50,7 @@ class FavoriteFragment : Fragment() {
         showLoading()
         initRecyclerView()
         lifecycleScope.launchWhenCreated {
-            viewModel.getAllFavoriteCity().observe(viewLifecycleOwner) {
+            viewModel.getAllFavoriteCity().collectLatest {
                 hideLoading()
                 favoriteAdapter.differ.submitList(it)
             }
@@ -60,10 +61,9 @@ class FavoriteFragment : Fragment() {
 
     private fun initRecyclerView() {
         binding.rclFavorite.apply {
-            layoutManager = GridLayoutManager(requireContext(),2)
+            layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = favoriteAdapter
             hasFixedSize()
-            hasPendingAdapterUpdates()
         }
     }
 
