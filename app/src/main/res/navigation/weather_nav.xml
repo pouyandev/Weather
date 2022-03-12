@@ -6,7 +6,6 @@
     app:startDestination="@id/searchFragment"
     maintainBackstack="true"
     >
-<!--   -->
     <fragment
         android:id="@+id/weatherFragment"
         android:name="com.example.globalweather.view.fragment.WeatherFragment"

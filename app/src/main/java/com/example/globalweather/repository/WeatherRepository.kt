@@ -1,15 +1,19 @@
 package com.example.globalweather.repository
 
 
+import android.content.Context
 import androidx.annotation.WorkerThread
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import com.example.globalweather.di.application.HiltApplication
 import com.example.globalweather.model.constant.City
 import com.example.globalweather.network.WeatherApi
 import com.example.globalweather.room.database.city.CityDao
 import com.example.globalweather.room.database.favorite.FavoriteDao
 import com.example.globalweather.room.entity.Favorite
+import com.example.globalweather.utils.Constants
+import com.example.globalweather.utils.Constants.PREFERENCES_NAME
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -21,7 +25,9 @@ class WeatherRepository @Inject constructor(
     private val favoriteDao: FavoriteDao
 ) {
 
-       /* private val dataStore: DataStore<Preferences> = HiltApplication.AppContext.createDataStore()*/
+    private val Context.dataStore by preferencesDataStore(
+        name = PREFERENCES_NAME
+    )
 
     suspend fun getCurrentData(city: String, appid: String) = flow { emit(api.getCurrentData(city, appid)) }.flowOn(IO)
 

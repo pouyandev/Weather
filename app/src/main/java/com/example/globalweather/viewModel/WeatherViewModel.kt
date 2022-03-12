@@ -2,7 +2,6 @@ package com.example.globalweather.viewModel
 
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.globalweather.di.application.HiltApplication
 import com.example.globalweather.di.application.HiltApplication.Companion.AppContext
@@ -15,8 +14,6 @@ import com.example.globalweather.utils.Constants.JSON_FILE
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -37,7 +34,7 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     val searchFavoriteQuery = MutableStateFlow("")
 
     init {
-        //  convertJsonAndUpsert()
+        convertJsonAndUpsert()
     }
 
 
@@ -94,6 +91,7 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     private fun searchFavoriteCity() = searchFavoriteQuery.flatMapLatest {
         repository.searchFavoriteCity(it)
     }
+
 
 
     @ExperimentalCoroutinesApi

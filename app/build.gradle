@@ -87,7 +87,6 @@ dependencies {
 
     //DataStore
     implementation "androidx.datastore:datastore-core:1.0.0"
-    implementation "androidx.datastore:datastore-preferences-core:1.0.0"
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
     //size
@@ -95,5 +94,5 @@ dependencies {
     implementation 'com.intuit.ssp:ssp-android:1.0.6'
 
     // Coil
-    implementation("io.coil-kt:coil:1.4.0")
+    implementation "io.coil-kt:coil:1.4.0"
 }
