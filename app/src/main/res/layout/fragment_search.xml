@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/search_city_icon_searchActivity"
+            android:id="@+id/search_icon_favorite_fragment"
             android:layout_width="@dimen/_15sdp"
             android:layout_height="@dimen/_15sdp"
             android:layout_marginEnd="@dimen/_15sdp"
@@ -40,7 +40,7 @@
             android:padding="@dimen/_7sdp"
             android:textSize="@dimen/_13ssp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/search_city_icon_searchActivity"
+            app:layout_constraintEnd_toStartOf="@+id/search_icon_favorite_fragment"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

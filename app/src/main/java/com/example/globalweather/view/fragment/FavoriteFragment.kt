@@ -1,6 +1,8 @@
 package com.example.globalweather.view.fragment
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
@@ -26,8 +28,6 @@ class FavoriteFragment : Fragment() {
     private val viewModel: WeatherViewModel by activityViewModels()
     private val favoriteAdapter by lazy { FavoriteAdapter() }
 
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,14 +49,44 @@ class FavoriteFragment : Fragment() {
     private fun init() {
         showLoading()
         initRecyclerView()
+        searchFavoriteCity()
+        getAllFavoriteCity()
+
+
+    }
+
+    private fun searchFavoriteCity() {
+        binding.edtSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (charSequence!!.isNotEmpty()) {
+                    viewModel.searchFavoriteQuery.value = charSequence.toString()
+                    lifecycleScope.launchWhenCreated {
+                        viewModel.searchFavoriteCities().collectLatest {
+                            favoriteAdapter.differ.submitList(it)
+                        }
+                    }
+                } else {
+                    getAllFavoriteCity()
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+    }
+
+    private fun getAllFavoriteCity() {
         lifecycleScope.launchWhenCreated {
             viewModel.getAllFavoriteCity().collectLatest {
                 hideLoading()
                 favoriteAdapter.differ.submitList(it)
             }
         }
-
-
     }
 
     private fun initRecyclerView() {
@@ -95,6 +125,7 @@ class FavoriteFragment : Fragment() {
                 Snackbar.make(view,"Successfully Deleted Favorite City", Snackbar.LENGTH_SHORT).apply {
                     setAction("Undo"){
                         viewModel.addFavoriteCity(favorite)
+
                     }
                     show()
                 }

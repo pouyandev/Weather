@@ -34,6 +34,7 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
 
 
     val searchQuery = MutableStateFlow("")
+    val searchFavoriteQuery = MutableStateFlow("")
 
     init {
         //  convertJsonAndUpsert()
@@ -41,7 +42,7 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
 
 
     fun convertJsonAndUpsert() {
-        job = viewModelScope.async(Default) {
+        job = viewModelScope.async {
             if (repository.getCities() != HiltApplication.cities) {
                 async { json() }.await()
                 async { repository.upserts(HiltApplication.cities) }.await()
@@ -51,14 +52,16 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     }
 
     fun addFavoriteCity(favorite: Favorite) {
-        job = viewModelScope.async(IO) {
-            val add = async { repository.fInsert(favorite) }
+        job = viewModelScope.async {
+            val add = async {
+                repository.fInsert(favorite)
+            }
             add.await()
         }
     }
 
     fun deleteFavoriteCity(favorite: Favorite){
-        job = viewModelScope.async(IO) {
+        job = viewModelScope.async {
             val delete = async { repository.deleteFavorite(favorite) }
             delete.await()
         }
@@ -88,7 +91,16 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     }
 
     @ExperimentalCoroutinesApi
-    fun searchCities() = searchCity().asLiveData(IO)
+    private fun searchFavoriteCity() = searchFavoriteQuery.flatMapLatest {
+        repository.searchFavoriteCity(it)
+    }
+
+
+    @ExperimentalCoroutinesApi
+    fun searchCities() = searchCity()
+
+    @ExperimentalCoroutinesApi
+    fun searchFavoriteCities() = searchFavoriteCity()
 
     suspend fun getCurrent(city: String) = repository.getCurrentData(city, API_KEY)
 

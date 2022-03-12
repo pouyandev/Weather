@@ -1,6 +1,7 @@
 package com.example.globalweather.room.database.favorite
 
 import androidx.room.*
+import com.example.globalweather.model.constant.City
 import com.example.globalweather.room.entity.Favorite
 @Dao
 interface FavoriteDao {
@@ -13,6 +14,9 @@ interface FavoriteDao {
 
     @Delete
     suspend fun deleteFavoriteCity(favorite: Favorite)
+
+    @Query("SELECT * FROM favorite_tbl WHERE City LIKE '%' || :query || '%'")
+    suspend fun searchFavoriteCity(query: String?): MutableList<Favorite>
 
 
 

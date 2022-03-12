@@ -23,42 +23,24 @@ class WeatherRepository @Inject constructor(
 
        /* private val dataStore: DataStore<Preferences> = HiltApplication.AppContext.createDataStore()*/
 
-    @WorkerThread
-    suspend fun getCurrentData(city: String, appid: String) =
-        flow { emit(api.getCurrentData(city, appid)) }.flowOn(IO)
+    suspend fun getCurrentData(city: String, appid: String) = flow { emit(api.getCurrentData(city, appid)) }.flowOn(IO)
 
+    suspend fun getHourlyData(city: String, appid: String) = flow { emit(api.getHourlyData(city, appid)) }.flowOn(IO)
 
-    @WorkerThread
-    suspend fun getHourlyData(city: String, appid: String) =
-        flow { emit(api.getHourlyData(city, appid)) }.flowOn(IO)
+    suspend fun getDailyData(city: String, appid: String) = flow { emit(api.getDailyData(city, appid)) }.flowOn(IO)
 
-
-    @WorkerThread
-    suspend fun getDailyData(city: String, appid: String) =
-        flow { emit(api.getDailyData(city, appid)) }.flowOn(IO)
-
-
-    @WorkerThread
     suspend fun getCities() = flow { emit(cityDao.getAllCity()) }.flowOn(IO)
 
-
-    @WorkerThread
     suspend fun upserts(cities: MutableList<City>) = cityDao.upserts(cities)
 
-
-    @WorkerThread
     suspend fun searchCity(query: String?) = flow { emit(cityDao.search(query)) }.flowOn(IO)
 
+    suspend fun searchFavoriteCity(query: String?) = flow { emit(favoriteDao.searchFavoriteCity(query)) }.flowOn(IO)
 
-    @WorkerThread
     suspend fun fInsert(favorite: Favorite) = favoriteDao.upsert(favorite)
 
-
-    @WorkerThread
     suspend fun getAllCityFavorite() = flow { emit(favoriteDao.getAllCityFavorite()) }.flowOn(IO)
 
-
-    @WorkerThread
     suspend fun deleteFavorite(favorite: Favorite) = favoriteDao.deleteFavoriteCity(favorite)
 
 }

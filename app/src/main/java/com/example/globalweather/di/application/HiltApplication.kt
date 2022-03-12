@@ -9,11 +9,8 @@ import dagger.hilt.android.HiltAndroidApp
 class HiltApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-
         AppContext = applicationContext
         cities = ArrayList()
-
-
     }
 
 

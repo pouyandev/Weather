@@ -420,7 +420,8 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_baseline_favorite_24"
         app:fabSize="normal"
-        android:layout_marginBottom="@dimen/_20sdp"
+        android:visibility="invisible"
+        android:layout_marginBottom="@dimen/_15sdp"
         android:layout_marginEnd="@dimen/_15sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

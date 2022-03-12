@@ -47,18 +47,6 @@ class DailyAdapter() : RecyclerView.Adapter<DailyAdapter.DailyViewHolder>() {
     class DailyViewHolder(private val binding: ItemDailyBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        companion object {
-            fun create(parent: ViewGroup): DailyViewHolder {
-                return DailyViewHolder(
-                    ItemDailyBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
-                    )
-                )
-            }
-        }
-
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(res: ListDaily) {
             binding.apply {
@@ -81,6 +69,18 @@ class DailyAdapter() : RecyclerView.Adapter<DailyAdapter.DailyViewHolder>() {
                     }
                 }
 
+            }
+        }
+
+        companion object {
+            fun create(parent: ViewGroup): DailyViewHolder {
+                return DailyViewHolder(
+                    ItemDailyBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
+                )
             }
         }
 

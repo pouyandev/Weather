@@ -8,6 +8,7 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.animation.TranslateAnimation
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -37,12 +38,14 @@ import kotlin.math.roundToInt
 @AndroidEntryPoint
 class WeatherFragment : Fragment() {
 
-    private var favorite: Favorite? = null
     private lateinit var binding: FragmentWeatherBinding
+
+    private var favorite: Favorite? = null
     private val viewModel: WeatherViewModel by activityViewModels()
     private val hourlyAdapter by lazy { HourlyAdapter() }
     private val dailyAdapter by lazy { DailyAdapter() }
     private val searchArgs: SearchFragmentArgs by navArgs()
+    private var animation: TranslateAnimation? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
     val formatter: DateTimeFormatter = DateTimeFormatter
@@ -62,7 +65,6 @@ class WeatherFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         init()
-
 
     }
 
@@ -100,13 +102,10 @@ class WeatherFragment : Fragment() {
                     val x = scrollY - oldScrollY
                     when {
                         x > 0 -> {
-                            fab.show()
-                        }
-                        x < 0 -> {
-                            fab.hide()
+                            fabShow(fab)
                         }
                         else -> {
-                            fab.hide()
+                            fabHide(fab)
                         }
                     }
                 }
@@ -114,12 +113,31 @@ class WeatherFragment : Fragment() {
         }
     }
 
+    private fun fabShow(fab: View) {
+        animation = TranslateAnimation(0f, 0f, 500f, 0f)
+        animation!!.duration = 300
+        fab.startAnimation(animation)
+        fab.visibility = VISIBLE
+    }
+
+    private fun fabHide(fab: View) {
+        animation = TranslateAnimation(0f, 0f, 0f, 500f)
+        animation!!.duration = 300
+        fab.startAnimation(animation)
+        fab.visibility = INVISIBLE
+    }
+
     private fun forecastDailyDetail() {
         lifecycleScope.launchWhenCreated {
-            viewModel.getDaily(city = searchArgs.pCityName.name).collectLatest {
-                hideLoading()
-                initDailyRecyclerView()
-                dailyAdapter.differ.submitList(it.list)
+            viewModel.getDaily(city = searchArgs.pCityName.name).collectLatest {response->
+                if (response.isSuccessful){
+                    response.body()!!.run {
+                        hideLoading()
+                        initDailyRecyclerView()
+                        dailyAdapter.differ.submitList(list)
+                    }
+                }
+
             }
         }
 
@@ -128,10 +146,16 @@ class WeatherFragment : Fragment() {
     private fun forecastHourlyDetail() {
         lifecycleScope.launchWhenCreated {
             hideLoading()
-            viewModel.getHourly(city = searchArgs.pCityName.name).collectLatest {
-                hideLoading()
-                initHourlyRecyclerView()
-                hourlyAdapter.differ.submitList(it.list)
+            viewModel.getHourly(city = searchArgs.pCityName.name).collectLatest {response->
+                if (response.isSuccessful){
+                    response.body()!!.run {
+                        hideLoading()
+                        initHourlyRecyclerView()
+                        hourlyAdapter.differ.submitList(list)
+                    }
+
+                }
+
             }
         }
 
@@ -142,62 +166,64 @@ class WeatherFragment : Fragment() {
     private fun currentDetail() {
         lifecycleScope.launchWhenCreated {
             hideLoading()
-            viewModel.getCurrent(city = searchArgs.pCityName.name).collectLatest {
+            viewModel.getCurrent(city = searchArgs.pCityName.name).collectLatest {response->
                 binding.apply {
-                    it.run {
-                        txtCityName.text = name
-                        txtDateMain.text =
-                            Instant.ofEpochSecond(dt.toLong())
-                                .atZone(ZoneId.systemDefault())
-                                .toLocalDate()
-                                .format(
-                                    DateTimeFormatter.ofPattern("EEE, MMM d")
-                                )
+                    if (response.isSuccessful){
+                        response.body()!!.run {
+                            txtCityName.text = name
+                            txtDateMain.text =
+                                Instant.ofEpochSecond(dt.toLong())
+                                    .atZone(ZoneId.systemDefault())
+                                    .toLocalDate()
+                                    .format(
+                                        DateTimeFormatter.ofPattern("EEE, MMM d")
+                                    )
 
-                        txtTemp.text = (main.temp.roundToInt() - 273).toString() + " \u00B0"
+                            txtTemp.text = (main.temp.roundToInt() - 273).toString() + " \u00B0"
+                            txtDescription.text = weather[0].main
+                            txtFeelsLike.text =
+                                (main.feels_like.roundToInt() - 273).toString() + " \u00B0"
 
-                        txtDescription.text = weather[0].main
-                        txtFeelsLike.text =
-                            (main.feels_like.roundToInt() - 273).toString() + " \u00B0"
+                            binding.txtDownMain.text =
+                                (main.temp_min.roundToInt() - 273).toString() + " \u00B0"
+                            binding.txtUpMain.text =
+                                (main.temp_max.roundToInt() - 273).toString() + " \u00B0"
 
-                        binding.txtDownMain.text =
-                            (main.temp_min.roundToInt() - 273).toString() + " \u00B0"
-                        binding.txtUpMain.text =
-                            (main.temp_max.roundToInt() - 273).toString() + " \u00B0"
+                            val sunriseInstant: Instant = Instant.ofEpochSecond(sys.sunrise.toLong())
 
-                        val sunriseInstant: Instant = Instant.ofEpochSecond(sys.sunrise.toLong())
+                            val sunsetInstant: Instant = Instant.ofEpochSecond(sys.sunset.toLong())
 
-                        val sunsetInstant: Instant = Instant.ofEpochSecond(sys.sunset.toLong())
+                            txtSunriseMain.text = formatTime(sunriseInstant)
 
-                        txtSunriseMain.text = formatTime(sunriseInstant)
+                            txtSunsetMain.text = formatTime(sunsetInstant)
 
-                        txtSunsetMain.text = formatTime(sunsetInstant)
+                            txtVisibilityMain.text = ((visibility) / 1000).toString() + " km/h"
 
-                        txtVisibilityMain.text = ((visibility) / 1000).toString() + " km/h"
+                            txtHumidityMain.text = main.humidity.toString() + " %"
 
-                        txtHumidityMain.text = main.humidity.toString() + " %"
+                            txtWindMain.text = (((wind.speed) * 3.5).roundToInt()).toString() + " km/h"
 
-                        txtWindMain.text = (((wind.speed) * 3.5).roundToInt()).toString() + " km/h"
+                            txtPressureMain.text = main.pressure.toString() + " hPa"
 
-                        txtPressureMain.text = main.pressure.toString() + " hPa"
+                            val iconUrl = "http://openweathermap.org/img/w/" + weather[0].icon + ".png"
 
-                        val iconUrl = "http://openweathermap.org/img/w/" + weather[0].icon + ".png"
-
-                        imgIconMain.load(iconUrl) {
-                            crossfade(true)
-                            crossfade(100)
-                            allowConversionToBitmap(true)
-                            diskCachePolicy(CachePolicy.ENABLED)
-                            allowHardware(true)
+                            imgIconMain.load(iconUrl) {
+                                crossfade(true)
+                                crossfade(100)
+                                allowConversionToBitmap(true)
+                                diskCachePolicy(CachePolicy.ENABLED)
+                                allowHardware(true)
+                            }
+                            favorite = Favorite(
+                                searchArgs.pCityName.id,
+                                searchArgs.pCityName.name,
+                                searchArgs.pCityName.country,
+                                "http://openweathermap.org/img/w/" + weather[0].icon + ".png",
+                                (main.temp.roundToInt() - 273).toString() + " \u00B0"
+                            )
                         }
-                        favorite = Favorite(
-                            searchArgs.pCityName.id,
-                            searchArgs.pCityName.name,
-                            searchArgs.pCityName.country,
-                            "http://openweathermap.org/img/w/" + it.weather[0].icon + ".png",
-                            (it.main.temp.roundToInt() - 273).toString() + " \u00B0"
-                        )
                     }
+
 
                 }
             }
@@ -207,9 +233,7 @@ class WeatherFragment : Fragment() {
 
     private fun initHourlyRecyclerView() {
         binding.rclForecastHourly.apply {
-            layoutManager = LinearLayoutManager(
-                requireContext(), HORIZONTAL, false
-            )
+            layoutManager = LinearLayoutManager(requireContext(), HORIZONTAL, false)
             adapter = hourlyAdapter
             hasFixedSize()
         }

@@ -8,7 +8,6 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -28,22 +27,6 @@ class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
     private val viewModel: WeatherViewModel by activityViewModels()
     private val cityAdapter by lazy { CityAdapter() }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
- /*       // This callback will only be called when MyFragment is at least Started.
-        val callback: OnBackPressedCallback =
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                   requireActivity().onBackPressedDispatcher.onBackPressed()
-                }
-            }
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback);
-
-        // The callback can be enabled or disabled here or in handleOnBackPressed()*/
-    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,8 +63,10 @@ class SearchFragment : Fragment() {
             override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (charSequence!!.isNotEmpty()) {
                     viewModel.searchQuery.value = charSequence.toString()
-                    viewModel.searchCities().observe(viewLifecycleOwner) {
-                        cityAdapter.differ.submitList(it)
+                    lifecycleScope.launchWhenCreated {
+                        viewModel.searchCities().collectLatest {
+                            cityAdapter.differ.submitList(it)
+                        }
                     }
                 } else {
                     lifecycleScope.launchWhenCreated {

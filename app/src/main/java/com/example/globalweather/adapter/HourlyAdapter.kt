@@ -44,31 +44,18 @@ class HourlyAdapter : RecyclerView.Adapter<HourlyAdapter.HourlyViewHolder>() {
     class HourlyViewHolder(private val binding: ItemHourlyBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        companion object {
-            fun create(parent: ViewGroup): HourlyViewHolder {
-                return HourlyViewHolder(
-                    ItemHourlyBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
-                    )
-                )
 
-            }
-        }
-
-
-    @SuppressLint("SimpleDateFormat", "SetTextI18n")
-    fun bind(res: ListHourly) {
-        binding.apply {
-            res.run {
-                txtTempHourly.text = (main.temp.roundToInt() - 273).toString() + " \u00B0"
-                val input = SimpleDateFormat("yyyy-MM-dd hh:mm")
-                val output = SimpleDateFormat("h:mm a")
-                val date: Date = input.parse(dt_txt)
-                txtTimeHourly.text = output.format(date)
-                val dateListWeather: List<String> = dt_txt.split(" ")
-                txtDateHourly.text = dateListWeather[0]
+        @SuppressLint("SimpleDateFormat", "SetTextI18n")
+        fun bind(res: ListHourly) {
+            binding.apply {
+                res.run {
+                    txtTempHourly.text = (main.temp.roundToInt() - 273).toString() + " \u00B0"
+                    val input = SimpleDateFormat("yyyy-MM-dd hh:mm")
+                    val output = SimpleDateFormat("h:mm a")
+                    val date: Date = input.parse(dt_txt)
+                    txtTimeHourly.text = output.format(date)
+                    val dateListWeather: List<String> = dt_txt.split(" ")
+                    txtDateHourly.text = dateListWeather[0]
                     val iconUrl =
                         "http://openweathermap.org/img/w/" + weather[0].icon + ".png";
 
@@ -80,6 +67,19 @@ class HourlyAdapter : RecyclerView.Adapter<HourlyAdapter.HourlyViewHolder>() {
                         diskCachePolicy(CachePolicy.ENABLED)
                     }
                 }
+
+            }
+        }
+
+        companion object {
+            fun create(parent: ViewGroup): HourlyViewHolder {
+                return HourlyViewHolder(
+                    ItemHourlyBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
+                )
 
             }
         }
