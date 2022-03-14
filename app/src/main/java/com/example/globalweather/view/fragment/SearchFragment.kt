@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.globalweather.R
 import com.example.globalweather.adapter.CityAdapter
 import com.example.globalweather.databinding.FragmentSearchBinding
+import com.example.globalweather.di.application.HiltApplication
 import com.example.globalweather.viewModel.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,20 +42,33 @@ class SearchFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         init()
+
+
     }
 
 
     @ExperimentalCoroutinesApi
     private fun init() {
         showLoading()
-        cityAdapter.setOnItemClickListener {
-            val bundle = Bundle().apply {
-                putParcelable("pCityName", it)
-            }
-            findNavController().navigate(R.id.action_searchFragment_to_weatherFragment, bundle)
-        }
+        cityItemClick()
         initRecyclerView()
         getAllCity()
+        searchCity()
+
+    }
+
+    private fun cityItemClick() {
+        cityAdapter.setOnItemClickListener {
+            lifecycleScope.launchWhenCreated {
+                HiltApplication.cityDetails.storeDetails(
+                    it.name
+                )
+                findNavController().navigate(R.id.action_searchFragment_to_weatherFragment)
+            }
+        }
+    }
+
+    private fun searchCity() {
         binding.edtSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -62,7 +76,7 @@ class SearchFragment : Fragment() {
 
             override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (charSequence!!.isNotEmpty()) {
-                    viewModel.searchQuery.value = charSequence.toString()
+                    viewModel.searchQuery.value = charSequence.toString().trim()
                     lifecycleScope.launchWhenCreated {
                         viewModel.searchCities().collectLatest {
                             cityAdapter.differ.submitList(it)

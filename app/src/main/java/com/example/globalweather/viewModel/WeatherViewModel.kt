@@ -34,7 +34,7 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     val searchFavoriteQuery = MutableStateFlow("")
 
     init {
-        convertJsonAndUpsert()
+       // convertJsonAndUpsert()
     }
 
 

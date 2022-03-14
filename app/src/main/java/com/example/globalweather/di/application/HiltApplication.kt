@@ -1,7 +1,9 @@
 package com.example.globalweather.di.application
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import com.example.globalweather.dataStore.CityDetails
 import com.example.globalweather.model.constant.City
 import dagger.hilt.android.HiltAndroidApp
 
@@ -10,6 +12,8 @@ class HiltApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         AppContext = applicationContext
+        cityDetails= CityDetails(AppContext)
+
         cities = ArrayList()
     }
 
@@ -17,6 +21,7 @@ class HiltApplication : Application() {
     companion object {
         lateinit var AppContext: Context
         lateinit var cities: MutableList<City>
+        lateinit var cityDetails: CityDetails
     }
 
 }

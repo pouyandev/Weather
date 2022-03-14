@@ -3,9 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/weather_nav"
-    app:startDestination="@id/searchFragment"
-    maintainBackstack="true"
-    >
+    app:startDestination="@id/weatherFragment">
     <fragment
         android:id="@+id/weatherFragment"
         android:name="com.example.globalweather.view.fragment.WeatherFragment"
@@ -18,6 +16,7 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
+
             />
         <action
             android:id="@+id/action_weatherFragment_to_searchFragment"
@@ -41,9 +40,11 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             />
-        <argument
+        <!--<argument
             android:name="pCityName"
-            app:argType="com.example.globalweather.model.constant.City" />
+            android:defaultValue="@null"
+            app:nullable="true"
+            app:argType="com.example.globalweather.model.constant.City" />-->
     </fragment>
     <fragment
         android:id="@+id/favoriteFragment"

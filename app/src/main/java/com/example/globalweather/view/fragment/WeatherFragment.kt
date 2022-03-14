@@ -23,6 +23,7 @@ import com.example.globalweather.R
 import com.example.globalweather.adapter.DailyAdapter
 import com.example.globalweather.adapter.HourlyAdapter
 import com.example.globalweather.databinding.FragmentWeatherBinding
+import com.example.globalweather.di.application.HiltApplication
 import com.example.globalweather.room.entity.Favorite
 import com.example.globalweather.viewModel.WeatherViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -44,7 +45,7 @@ class WeatherFragment : Fragment() {
     private val viewModel: WeatherViewModel by activityViewModels()
     private val hourlyAdapter by lazy { HourlyAdapter() }
     private val dailyAdapter by lazy { DailyAdapter() }
-    private val searchArgs: SearchFragmentArgs by navArgs()
+  /*  private val searchArgs: SearchFragmentArgs by navArgs()*/
     private var animation: TranslateAnimation? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -59,23 +60,37 @@ class WeatherFragment : Fragment() {
         binding = FragmentWeatherBinding.inflate(inflater, container, false)
         return binding.root
 
+
     }
+
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStart() {
         super.onStart()
         init()
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun init() {
         showLoading()
-        currentDetail()
-        forecastHourlyDetail()
-        forecastDailyDetail()
+        lifecycleScope.launchWhenCreated {
+            HiltApplication.cityDetails.getCityName().collect{
+                getData(it)
+            }
+        }
+
         showAndHideFab()
         actionSearchAndFavorite()
+
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getData(city: String) {
+        currentDetail(city)
+        forecastHourlyDetail(city)
+        forecastDailyDetail(city)
     }
 
     private fun actionSearchAndFavorite() {
@@ -127,10 +142,10 @@ class WeatherFragment : Fragment() {
         fab.visibility = INVISIBLE
     }
 
-    private fun forecastDailyDetail() {
+    private fun forecastDailyDetail(city: String) {
         lifecycleScope.launchWhenCreated {
-            viewModel.getDaily(city = searchArgs.pCityName.name).collectLatest {response->
-                if (response.isSuccessful){
+            viewModel.getDaily(city = city).collectLatest { response ->
+                if (response.isSuccessful) {
                     response.body()!!.run {
                         hideLoading()
                         initDailyRecyclerView()
@@ -143,19 +158,17 @@ class WeatherFragment : Fragment() {
 
     }
 
-    private fun forecastHourlyDetail() {
+    private fun forecastHourlyDetail(city: String) {
         lifecycleScope.launchWhenCreated {
             hideLoading()
-            viewModel.getHourly(city = searchArgs.pCityName.name).collectLatest {response->
-                if (response.isSuccessful){
+            viewModel.getHourly(city = city).collectLatest { response ->
+                if (response.isSuccessful) {
                     response.body()!!.run {
                         hideLoading()
                         initHourlyRecyclerView()
                         hourlyAdapter.differ.submitList(list)
                     }
-
                 }
-
             }
         }
 
@@ -163,12 +176,12 @@ class WeatherFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
-    private fun currentDetail() {
+    private fun currentDetail(city: String) {
         lifecycleScope.launchWhenCreated {
             hideLoading()
-            viewModel.getCurrent(city = searchArgs.pCityName.name).collectLatest {response->
+            viewModel.getCurrent(city = city).collectLatest { response ->
                 binding.apply {
-                    if (response.isSuccessful){
+                    if (response.isSuccessful) {
                         response.body()!!.run {
                             txtCityName.text = name
                             txtDateMain.text =
@@ -214,13 +227,13 @@ class WeatherFragment : Fragment() {
                                 diskCachePolicy(CachePolicy.ENABLED)
                                 allowHardware(true)
                             }
-                            favorite = Favorite(
-                                searchArgs.pCityName.id,
-                                searchArgs.pCityName.name,
-                                searchArgs.pCityName.country,
+                 /*           favorite = Favorite(
+                                searchArgs.pCityName!!.id,
+                                searchArgs.pCityName!!.name,
+                                searchArgs.pCityName!!.country,
                                 "http://openweathermap.org/img/w/" + weather[0].icon + ".png",
                                 (main.temp.roundToInt() - 273).toString() + " \u00B0"
-                            )
+                            )*/
                         }
                     }
 

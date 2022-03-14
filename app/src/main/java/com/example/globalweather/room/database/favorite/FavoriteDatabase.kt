@@ -10,7 +10,6 @@ import com.example.globalweather.room.entity.Favorite
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Database(entities = [Favorite::class], version = 1, exportSchema = false)
-//@TypeConverters(FavoriteConverter::class)
 abstract class FavoriteDatabase : RoomDatabase() {
 
     abstract fun getFavoriteDao(): FavoriteDao

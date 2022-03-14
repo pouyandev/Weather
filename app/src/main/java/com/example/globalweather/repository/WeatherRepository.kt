@@ -15,8 +15,10 @@ import com.example.globalweather.room.entity.Favorite
 import com.example.globalweather.utils.Constants
 import com.example.globalweather.utils.Constants.PREFERENCES_NAME
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.observeOn
 import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(
@@ -24,11 +26,6 @@ class WeatherRepository @Inject constructor(
     private val cityDao: CityDao,
     private val favoriteDao: FavoriteDao
 ) {
-
-    private val Context.dataStore by preferencesDataStore(
-        name = PREFERENCES_NAME
-    )
-
     suspend fun getCurrentData(city: String, appid: String) = flow { emit(api.getCurrentData(city, appid)) }.flowOn(IO)
 
     suspend fun getHourlyData(city: String, appid: String) = flow { emit(api.getHourlyData(city, appid)) }.flowOn(IO)
