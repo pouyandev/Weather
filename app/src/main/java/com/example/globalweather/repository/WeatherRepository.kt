@@ -24,8 +24,7 @@ import javax.inject.Inject
 class WeatherRepository @Inject constructor(
     private val api: WeatherApi,
     private val cityDao: CityDao,
-    private val favoriteDao: FavoriteDao
-) {
+    private val favoriteDao: FavoriteDao) {
     suspend fun getCurrentData(city: String, appid: String) = flow { emit(api.getCurrentData(city, appid)) }.flowOn(IO)
 
     suspend fun getHourlyData(city: String, appid: String) = flow { emit(api.getHourlyData(city, appid)) }.flowOn(IO)

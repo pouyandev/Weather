@@ -19,8 +19,12 @@ import com.example.globalweather.databinding.FragmentSearchBinding
 import com.example.globalweather.di.application.HiltApplication
 import com.example.globalweather.viewModel.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -59,10 +63,8 @@ class SearchFragment : Fragment() {
 
     private fun cityItemClick() {
         cityAdapter.setOnItemClickListener {
-            lifecycleScope.launchWhenCreated {
-                HiltApplication.cityDetails.storeDetails(
-                    it.name
-                )
+            CoroutineScope(IO).launch(Main) {
+                HiltApplication.cityDetails.storeDetails(it.name)
                 findNavController().navigate(R.id.action_searchFragment_to_weatherFragment)
             }
         }

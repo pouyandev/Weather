@@ -6,4 +6,5 @@ object Constants {
     const val COUNTRY_ID = "IR"
     const val JSON_FILE = "city.list.json"
     const val PREFERENCES_NAME = "city_name_preferences"
+    const val PREFERENCES_KEY = "CITY_NAME"
 }

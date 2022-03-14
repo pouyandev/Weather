@@ -66,6 +66,7 @@ class FavoriteFragment : Fragment() {
                     viewModel.searchFavoriteQuery.value = charSequence.toString()
                     lifecycleScope.launchWhenCreated {
                         viewModel.searchFavoriteCities().collectLatest {
+                            hideLoading()
                             favoriteAdapter.differ.submitList(it)
                         }
                     }

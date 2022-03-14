@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import coil.load
@@ -45,7 +44,7 @@ class WeatherFragment : Fragment() {
     private val viewModel: WeatherViewModel by activityViewModels()
     private val hourlyAdapter by lazy { HourlyAdapter() }
     private val dailyAdapter by lazy { DailyAdapter() }
-  /*  private val searchArgs: SearchFragmentArgs by navArgs()*/
+
     private var animation: TranslateAnimation? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -68,15 +67,17 @@ class WeatherFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStart() {
         super.onStart()
+
         init()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun init() {
         showLoading()
+
         lifecycleScope.launchWhenCreated {
-            HiltApplication.cityDetails.getCityName().collect{
-                getData(it)
+            HiltApplication.cityDetails.getCityName().collectLatest {
+                getData(it).toString()
             }
         }
 
@@ -214,11 +215,13 @@ class WeatherFragment : Fragment() {
 
                             txtHumidityMain.text = main.humidity.toString() + " %"
 
-                            txtWindMain.text = (((wind.speed) * 3.5).roundToInt()).toString() + " km/h"
+                            txtWindMain.text =
+                                (((wind.speed) * 3.5).roundToInt()).toString() + " km/h"
 
                             txtPressureMain.text = main.pressure.toString() + " hPa"
 
-                            val iconUrl = "http://openweathermap.org/img/w/" + weather[0].icon + ".png"
+                            val iconUrl =
+                                "http://openweathermap.org/img/w/" + weather[0].icon + ".png"
 
                             imgIconMain.load(iconUrl) {
                                 crossfade(true)
@@ -227,13 +230,11 @@ class WeatherFragment : Fragment() {
                                 diskCachePolicy(CachePolicy.ENABLED)
                                 allowHardware(true)
                             }
-                 /*           favorite = Favorite(
-                                searchArgs.pCityName!!.id,
-                                searchArgs.pCityName!!.name,
-                                searchArgs.pCityName!!.country,
+                            favorite = Favorite(
+                                id, name, sys.country,
                                 "http://openweathermap.org/img/w/" + weather[0].icon + ".png",
                                 (main.temp.roundToInt() - 273).toString() + " \u00B0"
-                            )*/
+                            )
                         }
                     }
 
