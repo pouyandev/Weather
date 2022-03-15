@@ -10,6 +10,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -63,7 +64,7 @@ class SearchFragment : Fragment() {
 
     private fun cityItemClick() {
         cityAdapter.setOnItemClickListener {
-            CoroutineScope(IO).launch(Main) {
+            lifecycleScope.launchWhenCreated {
                 HiltApplication.cityDetails.storeDetails(it.name)
                 findNavController().navigate(R.id.action_searchFragment_to_weatherFragment)
             }

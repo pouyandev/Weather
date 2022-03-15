@@ -67,16 +67,17 @@ class WeatherFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStart() {
         super.onStart()
-
         init()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun init() {
         showLoading()
-
         lifecycleScope.launchWhenCreated {
             HiltApplication.cityDetails.getCityName().collectLatest {
+                if (it == ""){
+                    findNavController().navigate(R.id.action_weatherFragment_to_searchFragment)
+                }
                 getData(it).toString()
             }
         }
@@ -89,6 +90,7 @@ class WeatherFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getData(city: String) {
+        hideLoading()
         currentDetail(city)
         forecastHourlyDetail(city)
         forecastDailyDetail(city)
@@ -148,7 +150,6 @@ class WeatherFragment : Fragment() {
             viewModel.getDaily(city = city).collectLatest { response ->
                 if (response.isSuccessful) {
                     response.body()!!.run {
-                        hideLoading()
                         initDailyRecyclerView()
                         dailyAdapter.differ.submitList(list)
                     }
@@ -161,11 +162,9 @@ class WeatherFragment : Fragment() {
 
     private fun forecastHourlyDetail(city: String) {
         lifecycleScope.launchWhenCreated {
-            hideLoading()
             viewModel.getHourly(city = city).collectLatest { response ->
                 if (response.isSuccessful) {
                     response.body()!!.run {
-                        hideLoading()
                         initHourlyRecyclerView()
                         hourlyAdapter.differ.submitList(list)
                     }
@@ -179,7 +178,6 @@ class WeatherFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun currentDetail(city: String) {
         lifecycleScope.launchWhenCreated {
-            hideLoading()
             viewModel.getCurrent(city = city).collectLatest { response ->
                 binding.apply {
                     if (response.isSuccessful) {

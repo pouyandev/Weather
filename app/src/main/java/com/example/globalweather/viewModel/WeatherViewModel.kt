@@ -1,6 +1,7 @@
 package com.example.globalweather.viewModel
 
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.globalweather.di.application.HiltApplication
@@ -28,13 +29,13 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
 
     private var job: Job? = null
     private lateinit var cities: MutableList<City>
-
+    private val currentData:MutableLiveData<City> = MutableLiveData()
 
     val searchQuery = MutableStateFlow("")
     val searchFavoriteQuery = MutableStateFlow("")
 
     init {
-        //convertJsonAndUpsert()
+       // convertJsonAndUpsert()
     }
 
 
@@ -47,6 +48,13 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
         }
 
     }
+
+/*    fun current(city: String) {
+        job = viewModelScope.async {
+            val current = repository.getCurrentData(city, API_KEY)
+            currentData.postValue(current)
+        }
+    }*/
 
     fun addFavoriteCity(favorite: Favorite) {
         job = viewModelScope.async {
