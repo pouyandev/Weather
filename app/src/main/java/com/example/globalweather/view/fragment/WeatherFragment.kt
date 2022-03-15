@@ -3,6 +3,7 @@ package com.example.globalweather.view.fragment
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
@@ -24,10 +25,14 @@ import com.example.globalweather.adapter.HourlyAdapter
 import com.example.globalweather.databinding.FragmentWeatherBinding
 import com.example.globalweather.di.application.HiltApplication
 import com.example.globalweather.room.entity.Favorite
+import com.example.globalweather.utils.WeatherState
 import com.example.globalweather.viewModel.WeatherViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -44,7 +49,6 @@ class WeatherFragment : Fragment() {
     private val viewModel: WeatherViewModel by activityViewModels()
     private val hourlyAdapter by lazy { HourlyAdapter() }
     private val dailyAdapter by lazy { DailyAdapter() }
-
     private var animation: TranslateAnimation? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -72,13 +76,12 @@ class WeatherFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun init() {
-        showLoading()
         lifecycleScope.launchWhenCreated {
             HiltApplication.cityDetails.getCityName().collectLatest {
                 if (it == ""){
                     findNavController().navigate(R.id.action_weatherFragment_to_searchFragment)
                 }
-                getData(it).toString()
+                getData(it)
             }
         }
 
@@ -97,7 +100,6 @@ class WeatherFragment : Fragment() {
     }
 
     private fun actionSearchAndFavorite() {
-
         binding.apply {
             imgSearchMain.setOnClickListener {
                 findNavController().navigate(R.id.action_weatherFragment_to_searchFragment)
@@ -147,101 +149,128 @@ class WeatherFragment : Fragment() {
 
     private fun forecastDailyDetail(city: String) {
         lifecycleScope.launchWhenCreated {
-            viewModel.getDaily(city = city).collectLatest { response ->
-                if (response.isSuccessful) {
-                    response.body()!!.run {
-                        initDailyRecyclerView()
-                        dailyAdapter.differ.submitList(list)
+            viewModel.daily(city)
+            viewModel.getDaily().collectLatest {
+                when (it) {
+                    is WeatherState.Loading -> showLoading()
+                    is WeatherState.Error -> {
+                        hideLoading()
+                        Log.e("TAG", "forecastDailyDetail: ${it.error}")
                     }
-                }
+                    is WeatherState.SuccessDaily -> {
+                        hideLoading()
+                        initDailyRecyclerView()
+                        dailyAdapter.differ.submitList(it.response.body()!!.list)
+                    }
 
+                }
             }
+
         }
 
     }
 
     private fun forecastHourlyDetail(city: String) {
         lifecycleScope.launchWhenCreated {
-            viewModel.getHourly(city = city).collectLatest { response ->
-                if (response.isSuccessful) {
-                    response.body()!!.run {
+            viewModel.hourly(city)
+            viewModel.getHourly().collectLatest {
+                when (it) {
+                    is WeatherState.Loading -> showLoading()
+                    is WeatherState.Error -> {
+                        hideLoading()
+                        Log.e("TAG", "forecastHourlyDetail: ${it.error}")
+                    }
+                    is WeatherState.SuccessHourly -> {
+                        hideLoading()
                         initHourlyRecyclerView()
-                        hourlyAdapter.differ.submitList(list)
+                        hourlyAdapter.differ.submitList(it.response.body()!!.list)
                     }
                 }
             }
         }
 
+
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun currentDetail(city: String) {
         lifecycleScope.launchWhenCreated {
-            viewModel.getCurrent(city = city).collectLatest { response ->
-                binding.apply {
-                    if (response.isSuccessful) {
-                        response.body()!!.run {
-                            txtCityName.text = name
-                            txtDateMain.text =
-                                Instant.ofEpochSecond(dt.toLong())
-                                    .atZone(ZoneId.systemDefault())
-                                    .toLocalDate()
-                                    .format(
-                                        DateTimeFormatter.ofPattern("EEE, MMM d")
+            viewModel.current(city)
+            viewModel.getCurrent().collectLatest {
+                when (it) {
+                    is WeatherState.Loading -> showLoading()
+                    is WeatherState.Error -> {
+                        hideLoading()
+                        Log.e("TAG", "currentDetail: ${it.error}")
+                    }
+                    is WeatherState.SuccessCurrent -> {
+                        hideLoading()
+                        if (it.response.isSuccessful) {
+                            binding.apply {
+                                it.response.body()!!.run {
+                                    txtCityName.text = name
+                                    txtDateMain.text =
+                                        Instant.ofEpochSecond(dt.toLong())
+                                            .atZone(ZoneId.systemDefault())
+                                            .toLocalDate()
+                                            .format(
+                                                DateTimeFormatter.ofPattern("EEE, MMM d")
+                                            )
+
+                                    txtTemp.text = (main.temp.roundToInt() - 273).toString() + " \u00B0"
+                                    txtDescription.text = weather[0].main
+                                    txtFeelsLike.text =
+                                        (main.feels_like.roundToInt() - 273).toString() + " \u00B0"
+
+                                    binding.txtDownMain.text =
+                                        (main.temp_min.roundToInt() - 273).toString() + " \u00B0"
+                                    binding.txtUpMain.text =
+                                        (main.temp_max.roundToInt() - 273).toString() + " \u00B0"
+
+                                    val sunriseInstant: Instant = Instant.ofEpochSecond(sys.sunrise.toLong())
+
+                                    val sunsetInstant: Instant = Instant.ofEpochSecond(sys.sunset.toLong())
+
+                                    txtSunriseMain.text = formatTime(sunriseInstant)
+
+                                    txtSunsetMain.text = formatTime(sunsetInstant)
+
+                                    txtVisibilityMain.text = ((visibility) / 1000).toString() + " km/h"
+
+                                    txtHumidityMain.text = main.humidity.toString() + " %"
+
+                                    txtWindMain.text =
+                                        (((wind.speed) * 3.5).roundToInt()).toString() + " km/h"
+
+                                    txtPressureMain.text = main.pressure.toString() + " hPa"
+
+                                    val iconUrl =
+                                        "http://openweathermap.org/img/w/" + weather[0].icon + ".png"
+
+                                    imgIconMain.load(iconUrl) {
+                                        crossfade(true)
+                                        crossfade(100)
+                                        allowConversionToBitmap(true)
+                                        diskCachePolicy(CachePolicy.ENABLED)
+                                        allowHardware(true)
+                                    }
+                                    favorite = Favorite(
+                                        id, name, sys.country,
+                                        "http://openweathermap.org/img/w/" + weather[0].icon + ".png",
+                                        (main.temp.roundToInt() - 273).toString() + " \u00B0"
                                     )
-
-                            txtTemp.text = (main.temp.roundToInt() - 273).toString() + " \u00B0"
-                            txtDescription.text = weather[0].main
-                            txtFeelsLike.text =
-                                (main.feels_like.roundToInt() - 273).toString() + " \u00B0"
-
-                            binding.txtDownMain.text =
-                                (main.temp_min.roundToInt() - 273).toString() + " \u00B0"
-                            binding.txtUpMain.text =
-                                (main.temp_max.roundToInt() - 273).toString() + " \u00B0"
-
-                            val sunriseInstant: Instant = Instant.ofEpochSecond(sys.sunrise.toLong())
-
-                            val sunsetInstant: Instant = Instant.ofEpochSecond(sys.sunset.toLong())
-
-                            txtSunriseMain.text = formatTime(sunriseInstant)
-
-                            txtSunsetMain.text = formatTime(sunsetInstant)
-
-                            txtVisibilityMain.text = ((visibility) / 1000).toString() + " km/h"
-
-                            txtHumidityMain.text = main.humidity.toString() + " %"
-
-                            txtWindMain.text =
-                                (((wind.speed) * 3.5).roundToInt()).toString() + " km/h"
-
-                            txtPressureMain.text = main.pressure.toString() + " hPa"
-
-                            val iconUrl =
-                                "http://openweathermap.org/img/w/" + weather[0].icon + ".png"
-
-                            imgIconMain.load(iconUrl) {
-                                crossfade(true)
-                                crossfade(100)
-                                allowConversionToBitmap(true)
-                                diskCachePolicy(CachePolicy.ENABLED)
-                                allowHardware(true)
+                                }
                             }
-                            favorite = Favorite(
-                                id, name, sys.country,
-                                "http://openweathermap.org/img/w/" + weather[0].icon + ".png",
-                                (main.temp.roundToInt() - 273).toString() + " \u00B0"
-                            )
+
                         }
                     }
 
-
                 }
             }
-
         }
     }
+
 
     private fun initHourlyRecyclerView() {
         binding.rclForecastHourly.apply {
