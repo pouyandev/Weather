@@ -23,6 +23,7 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>
 
     }
     val differ = AsyncListDiffer(this, differCallback)
+    private var onItemClickListener: ((Favorite) -> Unit)? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {
         return FavoriteViewHolder(
             ItemFavoriteBinding.inflate(
@@ -41,12 +42,17 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>
         return differ.currentList.count()
     }
 
+    fun setOnItemClickListener(listener: (Favorite) -> Unit) {
+        onItemClickListener = listener
+    }
+
+
     inner class FavoriteViewHolder(private val binding: ItemFavoriteBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
         fun bind(favorite: Favorite) {
             binding.apply {
-                txtCityFavorite.text =favorite.cityName
+                txtCityFavorite.text = favorite.cityName
                 txtCountryFavorite.text = favorite.countryName.toString()
                 txtTempFavorite.text = favorite.main!!.toString()
                 imgIconFavorite.load(favorite.weather!!) {
@@ -57,6 +63,11 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>
                     allowHardware(true)
                 }
 
+            }
+            itemView.setOnClickListener {
+                onItemClickListener?.let {
+                    it(favorite)
+                }
             }
 
         }

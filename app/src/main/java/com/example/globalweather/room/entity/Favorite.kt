@@ -10,7 +10,7 @@ import com.example.globalweather.model.constant.Main
 import com.example.globalweather.model.constant.Weather
 import kotlinx.parcelize.Parcelize
 
-@Parcelize
+
 @Entity(tableName = "favorite_tbl")
 data class Favorite(
     @ColumnInfo(name = "Id")
@@ -25,4 +25,4 @@ data class Favorite(
     @ColumnInfo(name = "Temp")
     val main: String?
 
-) : Parcelable
+)

@@ -4,8 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import com.example.globalweather.room.converter.FavoriteConverter
 import com.example.globalweather.room.entity.Favorite
 import dagger.hilt.android.qualifiers.ApplicationContext
 

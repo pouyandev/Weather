@@ -12,11 +12,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.globalweather.R
 import com.example.globalweather.adapter.FavoriteAdapter
 import com.example.globalweather.databinding.FragmentFavoriteBinding
+import com.example.globalweather.di.application.HiltApplication
 import com.example.globalweather.utils.WeatherState
 import com.example.globalweather.viewModel.WeatherViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -55,10 +58,13 @@ class FavoriteFragment : Fragment() {
         initRecyclerView()
         searchFavoriteCity()
         getAllFavoriteCity()
-
-
+        favoriteAdapter.setOnItemClickListener {
+            lifecycleScope.launchWhenCreated {
+                HiltApplication.cityDetails.storeDetails(it.cityName!!.toString())
+                findNavController().navigate(R.id.action_favoriteFragment_to_weatherFragment)
+            }
+        }
     }
-
     private fun searchFavoriteCity() {
         binding.edtSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -98,6 +104,7 @@ class FavoriteFragment : Fragment() {
                         is WeatherState.SearchFavoriteCity -> {
                             hideLoading()
                             favoriteAdapter.differ.submitList(it.response)
+
                         }
                         else -> {}
                     }
@@ -141,7 +148,6 @@ class FavoriteFragment : Fragment() {
                 Snackbar.make(view,"Successfully Deleted Favorite City", Snackbar.LENGTH_SHORT).apply {
                     setAction("Undo"){
                         viewModel.addFavoriteCity(favorite)
-
                     }
                     show()
                 }

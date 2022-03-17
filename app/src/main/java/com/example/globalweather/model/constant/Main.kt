@@ -4,7 +4,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
-@Parcelize
+
 data class Main(
 
     @SerializedName("temp") val temp: Double,
@@ -16,5 +16,5 @@ data class Main(
     @SerializedName("grnd_level") val grnd_level: Int,
     @SerializedName("humidity") val humidity: Int,
     @SerializedName("temp_kf") val temp_kf: Double
-):Parcelable
+)
 

@@ -51,15 +51,9 @@ class CityAdapter : RecyclerView.Adapter<CityAdapter.CityViewHolder>() {
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
         fun bind(city: City) {
-            binding.apply {
-                txtCityName.text = city.name
-            }
-            itemView.setOnClickListener {
-                onItemClickListener?.let {
-                    it(city)
-                    }
-                }
-            }
+            binding.apply { txtCityName.text = city.name }
+            itemView.setOnClickListener { onItemClickListener?.let { it(city) } }
+        }
 
         }
     }

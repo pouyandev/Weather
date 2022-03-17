@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import coil.load
@@ -94,7 +95,6 @@ class WeatherFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getData(city: String) {
-
         currentDetail(city)
         forecastHourlyDetail(city)
         forecastDailyDetail(city)

@@ -1,6 +1,5 @@
 package com.example.globalweather.di.application
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import com.example.globalweather.dataStore.CityDetails
@@ -12,8 +11,7 @@ class HiltApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         AppContext = applicationContext
-        cityDetails= CityDetails(AppContext)
-
+        cityDetails = CityDetails(AppContext)
         cities = ArrayList()
     }
 

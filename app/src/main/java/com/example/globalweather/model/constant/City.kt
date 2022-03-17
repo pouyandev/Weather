@@ -8,7 +8,6 @@ import com.example.globalweather.model.constant.Coord
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
-@Parcelize
 @Entity(tableName = "city_tbl")
 data class City(
     @PrimaryKey(autoGenerate = true)
@@ -20,4 +19,4 @@ data class City(
     @SerializedName("timezone") val timezone: Int,
     @SerializedName("sunrise") val sunrise: Int,
     @SerializedName("sunset") val sunset: Int
-):Parcelable
+)
