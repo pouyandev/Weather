@@ -9,11 +9,7 @@ import com.example.globalweather.model.constant.City
 @Dao
 interface CityDao {
 
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun upsert(cities: City)
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upserts(cities: MutableList<City>)
 
     @Query("SELECT * FROM city_tbl ORDER BY id DESC")

@@ -3,6 +3,7 @@ package com.example.globalweather.view.fragment
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
@@ -10,7 +11,6 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,28 +18,29 @@ import com.example.globalweather.R
 import com.example.globalweather.adapter.CityAdapter
 import com.example.globalweather.databinding.FragmentSearchBinding
 import com.example.globalweather.di.application.HiltApplication
+import com.example.globalweather.utils.WeatherState
 import com.example.globalweather.viewModel.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
-    private lateinit var binding: FragmentSearchBinding
+    private var _binding: FragmentSearchBinding? = null
+
+    private val binding get() = _binding!!
     private val viewModel: WeatherViewModel by activityViewModels()
     private val cityAdapter by lazy { CityAdapter() }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -56,7 +57,7 @@ class SearchFragment : Fragment() {
     private fun init() {
         showLoading()
         cityItemClick()
-        initRecyclerView()
+
         getAllCity()
         searchCity()
 
@@ -86,12 +87,7 @@ class SearchFragment : Fragment() {
                         }
                     }
                 } else {
-                    lifecycleScope.launchWhenCreated {
-                        viewModel.getAllCity().collectLatest {
-                            hideLoading()
-                            cityAdapter.differ.submitList(it)
-                        }
-                    }
+                    getAllCity()
                 }
             }
 
@@ -104,10 +100,27 @@ class SearchFragment : Fragment() {
 
     private fun getAllCity() {
         lifecycleScope.launchWhenCreated {
-            hideLoading()
+            viewModel.cities()
             viewModel.getAllCity().collectLatest {
-                cityAdapter.differ.submitList(it)
+                when (it) {
+                    is WeatherState.Loading -> showLoading()
+                    is WeatherState.Error -> {
+                        hideLoading()
+                        Log.e("TAG", "getAllCity: ${it.error}")
+                    }
+                    is WeatherState.SearchCity -> {
+                        hideLoading()
+                        initRecyclerView()
+                        if (it.response.isNullOrEmpty()) {
+                            viewModel.convertJsonAndUpsert()
+                        }
+                        cityAdapter.differ.submitList(it.response)
+                    }
+                    else -> {}
+                }
             }
+
+
         }
     }
 
@@ -127,5 +140,10 @@ class SearchFragment : Fragment() {
         binding.prgSearch.visibility = INVISIBLE
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+
+    }
 
 }

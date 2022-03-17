@@ -30,7 +30,6 @@ import com.example.globalweather.viewModel.WeatherViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -43,7 +42,9 @@ import kotlin.math.roundToInt
 @AndroidEntryPoint
 class WeatherFragment : Fragment() {
 
-    private lateinit var binding: FragmentWeatherBinding
+    private var _binding: FragmentWeatherBinding? = null
+
+    private val binding get() = _binding!!
 
     private var favorite: Favorite? = null
     private val viewModel: WeatherViewModel by activityViewModels()
@@ -60,7 +61,7 @@ class WeatherFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentWeatherBinding.inflate(inflater, container, false)
+        _binding = FragmentWeatherBinding.inflate(inflater, container, false)
         return binding.root
 
 
@@ -93,7 +94,7 @@ class WeatherFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getData(city: String) {
-        hideLoading()
+
         currentDetail(city)
         forecastHourlyDetail(city)
         forecastDailyDetail(city)
@@ -106,8 +107,7 @@ class WeatherFragment : Fragment() {
             }
             imgFavoriteMain.setOnClickListener {
                 viewModel.addFavoriteCity(favorite!!)
-                Snackbar.make(view, "Selected city added successfully", Snackbar.LENGTH_SHORT)
-                    .show()
+                Snackbar.make(view, "Selected city added successfully", Snackbar.LENGTH_SHORT).show()
             }
             fab.setOnClickListener {
                 findNavController().navigate(R.id.action_weatherFragment_to_favoriteFragment)
@@ -124,8 +124,11 @@ class WeatherFragment : Fragment() {
                         x > 0 -> {
                             fabShow(fab)
                         }
-                        else -> {
+                        x < 0 -> {
                             fabHide(fab)
+                        }
+                        else -> {
+
                         }
                     }
                 }
@@ -135,20 +138,20 @@ class WeatherFragment : Fragment() {
 
     private fun fabShow(fab: View) {
         animation = TranslateAnimation(0f, 0f, 500f, 0f)
-        animation!!.duration = 300
+        animation!!.duration = 500
         fab.startAnimation(animation)
         fab.visibility = VISIBLE
     }
 
     private fun fabHide(fab: View) {
         animation = TranslateAnimation(0f, 0f, 0f, 500f)
-        animation!!.duration = 300
+        animation!!.duration = 500
         fab.startAnimation(animation)
         fab.visibility = INVISIBLE
     }
 
     private fun forecastDailyDetail(city: String) {
-        lifecycleScope.launchWhenCreated {
+        lifecycleScope.launchWhenCreated{
             viewModel.daily(city)
             viewModel.getDaily().collectLatest {
                 when (it) {
@@ -163,6 +166,7 @@ class WeatherFragment : Fragment() {
                         dailyAdapter.differ.submitList(it.response.body()!!.list)
                     }
 
+                    else -> {}
                 }
             }
 
@@ -185,6 +189,7 @@ class WeatherFragment : Fragment() {
                         initHourlyRecyclerView()
                         hourlyAdapter.differ.submitList(it.response.body()!!.list)
                     }
+                    else -> {}
                 }
             }
         }
@@ -266,6 +271,7 @@ class WeatherFragment : Fragment() {
                         }
                     }
 
+                    else -> {}
                 }
             }
         }
@@ -300,6 +306,11 @@ class WeatherFragment : Fragment() {
 
     private fun hideLoading() {
         binding.prgMain.visibility = INVISIBLE
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }

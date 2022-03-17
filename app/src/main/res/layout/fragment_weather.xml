@@ -79,7 +79,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_50sdp"
-
                 android:textColor="@color/white"
                 android:textSize="@dimen/_55ssp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -418,6 +417,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_baseline_favorite_24"
         app:fabSize="normal"
+        app:layout_behavior="com.support.android.designlibdemo.ScrollAwareFABBehavior"
         android:visibility="invisible"
         android:layout_marginBottom="@dimen/_15sdp"
         android:layout_marginEnd="@dimen/_15sdp"

@@ -20,6 +20,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.text.Charsets.UTF_8
 
@@ -33,37 +34,32 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     private val currentData: MutableStateFlow<WeatherState> = MutableStateFlow(WeatherState.Empty)
     private val hourlyData: MutableStateFlow<WeatherState> = MutableStateFlow(WeatherState.Empty)
     private val dailyData: MutableStateFlow<WeatherState> = MutableStateFlow(WeatherState.Empty)
+    private val allCities: MutableStateFlow<WeatherState> = MutableStateFlow(WeatherState.Empty)
+    private val favoriteCities: MutableStateFlow<WeatherState> =
+        MutableStateFlow(WeatherState.Empty)
 
     val searchQuery = MutableStateFlow("")
     val searchFavoriteQuery = MutableStateFlow("")
 
-    init {
-        //  convertJsonAndUpsert()
-    }
 
-
-    private fun convertJsonAndUpsert() {
-        job = viewModelScope.async {
-            if (repository.getCities() != HiltApplication.cities) {
-                async { json() }.await()
-                async { repository.upserts(HiltApplication.cities) }.await()
-            }
+    fun convertJsonAndUpsert() {
+        job = viewModelScope.launch(IO) {
+            async { json() }.await()
+            async { repository.upserts(HiltApplication.cities) }.await()
         }
 
     }
 
 
     fun addFavoriteCity(favorite: Favorite) {
-        job = viewModelScope.async {
-            val add = async {
-                repository.fInsert(favorite)
-            }
+        job = viewModelScope.launch {
+            val add = async { repository.fInsert(favorite) }
             add.await()
         }
     }
 
     fun deleteFavoriteCity(favorite: Favorite){
-        job = viewModelScope.async {
+        job = viewModelScope.launch {
             val delete = async { repository.deleteFavorite(favorite) }
             delete.await()
         }
@@ -87,7 +83,7 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
         }
     }
 
-    suspend fun handleCurrent(city: String) {
+    private suspend fun handleCurrent(city: String) {
         currentData.value = WeatherState.Loading
         repository.getCurrentData(city, API_KEY).catch { e ->
             currentData.value = WeatherState.Error(e)
@@ -100,13 +96,13 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     }
 
     fun current(city: String) {
-        job = viewModelScope.async(IO) {
-            val current = async { handleCurrent(city) }
+        job = viewModelScope.launch {
+            val current = async(IO) { handleCurrent(city) }
             current.await()
         }
     }
 
-    suspend fun handleHourly(city: String) {
+    private suspend fun handleHourly(city: String) {
         hourlyData.value = WeatherState.Loading
         repository.getHourlyData(city, API_KEY).catch { e ->
             hourlyData.value = WeatherState.Error(e)
@@ -114,18 +110,17 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
             if (it.isSuccessful) {
                 hourlyData.value = WeatherState.SuccessHourly(it)
             }
-
         }
     }
 
     fun hourly(city: String) {
-        job = viewModelScope.async(IO) {
-            val hourly = async { handleHourly(city) }
+        job = viewModelScope.launch {
+            val hourly = async(IO) { handleHourly(city) }
             hourly.await()
         }
     }
 
-    suspend fun handleDaily(city: String) {
+    private suspend fun handleDaily(city: String) {
         dailyData.value = WeatherState.Loading
         repository.getDailyData(city, API_KEY).catch { e ->
             dailyData.value = WeatherState.Error(e)
@@ -133,16 +128,49 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
             if (it.isSuccessful) {
                 dailyData.value = WeatherState.SuccessDaily(it)
             }
-
         }
     }
 
     fun daily(city: String) {
-        job = viewModelScope.async(IO) {
-            val daily = async { handleDaily(city) }
+        job = viewModelScope.launch {
+            val daily = async(IO) { handleDaily(city) }
             daily.await()
         }
     }
+
+    private suspend fun handleAllCity() {
+        allCities.value = WeatherState.Loading
+        repository.getCities().catch { e ->
+            allCities.value = WeatherState.Error(e)
+        }.collectLatest {
+            allCities.value = WeatherState.SearchCity(it!!)
+        }
+    }
+
+    fun cities() {
+        job = viewModelScope.launch {
+            val cities = async(IO) { handleAllCity() }
+            cities.await()
+        }
+    }
+
+    private suspend fun handleAllFavoriteCity() {
+        favoriteCities.value = WeatherState.Loading
+        repository.getAllCityFavorite().catch { e ->
+            favoriteCities.value = WeatherState.Error(e)
+        }.collectLatest {
+            favoriteCities.value = WeatherState.SearchFavoriteCity(it!!)
+        }
+    }
+
+    fun favoriteCities() {
+        job = viewModelScope.launch {
+            val favoriteCities = async(IO) { handleAllFavoriteCity() }
+            favoriteCities.await()
+        }
+    }
+
+
 
     @ExperimentalCoroutinesApi
     private fun searchCity() = searchQuery.flatMapLatest {
@@ -168,9 +196,9 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
 
     fun getDaily(): StateFlow<WeatherState> = dailyData
 
-    suspend fun getAllCity() = repository.getCities()
+    fun getAllCity(): StateFlow<WeatherState> = allCities
 
-    suspend fun getAllFavoriteCity() = repository.getAllCityFavorite()
+    fun getAllFavoriteCity(): StateFlow<WeatherState> = favoriteCities
 
     override fun onCleared() {
         super.onCleared()

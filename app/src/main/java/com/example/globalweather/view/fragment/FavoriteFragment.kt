@@ -3,6 +3,7 @@ package com.example.globalweather.view.fragment
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
@@ -16,15 +17,19 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.globalweather.adapter.FavoriteAdapter
 import com.example.globalweather.databinding.FragmentFavoriteBinding
+import com.example.globalweather.utils.WeatherState
 import com.example.globalweather.viewModel.WeatherViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
+
 @AndroidEntryPoint
 class FavoriteFragment : Fragment() {
 
-    private lateinit var binding: FragmentFavoriteBinding
+    private var _binding: FragmentFavoriteBinding? = null
+
+    private val binding get() = _binding!!
     private val viewModel: WeatherViewModel by activityViewModels()
     private val favoriteAdapter by lazy { FavoriteAdapter() }
 
@@ -32,7 +37,7 @@ class FavoriteFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentFavoriteBinding.inflate(inflater, container, false)
+        _binding = FragmentFavoriteBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -47,7 +52,6 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun init() {
-        showLoading()
         initRecyclerView()
         searchFavoriteCity()
         getAllFavoriteCity()
@@ -83,10 +87,21 @@ class FavoriteFragment : Fragment() {
 
     private fun getAllFavoriteCity() {
         lifecycleScope.launchWhenCreated {
-            viewModel.getAllFavoriteCity().collectLatest {
-                hideLoading()
-                favoriteAdapter.differ.submitList(it)
-            }
+            viewModel.favoriteCities()
+                viewModel.getAllFavoriteCity().collectLatest {
+                    when (it) {
+                        is WeatherState.Loading -> showLoading()
+                        is WeatherState.Error -> {
+                            hideLoading()
+                            Log.e("TAG", "favoriteCity: ${it.error}")
+                        }
+                        is WeatherState.SearchFavoriteCity -> {
+                            hideLoading()
+                            favoriteAdapter.differ.submitList(it.response)
+                        }
+                        else -> {}
+                    }
+                }
         }
     }
 
@@ -137,5 +152,9 @@ class FavoriteFragment : Fragment() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 
 }
