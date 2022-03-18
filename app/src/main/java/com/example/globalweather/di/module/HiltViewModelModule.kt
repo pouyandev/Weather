@@ -1,6 +1,6 @@
 package com.example.globalweather.di.module
 
-import com.example.globalweather.network.RetrofitBuilder
+
 import com.example.globalweather.network.WeatherApi
 import com.example.globalweather.repository.WeatherRepository
 import com.example.globalweather.room.database.city.CityDao
@@ -14,13 +14,6 @@ import dagger.hilt.android.scopes.ViewModelScoped
 @Module
 @InstallIn(ViewModelComponent::class)
 object HiltViewModelModule {
-
-    @Provides
-    @ViewModelScoped
-    fun provideWeatherApi(): WeatherApi =
-        RetrofitBuilder
-            .getRetrofit()
-            .create(WeatherApi::class.java)
 
     @Provides
     @ViewModelScoped

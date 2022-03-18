@@ -36,11 +36,15 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     private val hourlyData: MutableStateFlow<WeatherState> = MutableStateFlow(WeatherState.Empty)
     private val dailyData: MutableStateFlow<WeatherState> = MutableStateFlow(WeatherState.Empty)
     private val allCities: MutableStateFlow<WeatherState> = MutableStateFlow(WeatherState.Empty)
-    private val favoriteCities: MutableStateFlow<WeatherState> = MutableStateFlow(WeatherState.Empty)
+    private val favoriteCities: MutableStateFlow<WeatherState> =
+        MutableStateFlow(WeatherState.Empty)
 
     val searchQuery = MutableStateFlow("")
     val searchFavoriteQuery = MutableStateFlow("")
 
+    init {
+
+    }
 
     fun convertJsonAndUpsert() {
         job = viewModelScope.launch(Default) {
@@ -178,7 +182,9 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     }
 
     @ExperimentalCoroutinesApi
-    private fun searchFavoriteCity() = searchFavoriteQuery.flatMapLatest { repository.searchFavoriteCity(it) }
+    private fun searchFavoriteCity() = searchFavoriteQuery.flatMapLatest {
+        repository.searchFavoriteCity(it)
+    }
 
 
     @ExperimentalCoroutinesApi
