@@ -6,14 +6,14 @@ import com.example.globalweather.room.entity.Favorite
 interface FavoriteDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsert(favorite: Favorite)
+    suspend fun upsert(favorite: Favorite?)
 
     @Query("SELECT * FROM favorite_tbl")
     suspend fun getAllCityFavorite(): MutableList<Favorite>?
 
     @Delete
-    suspend fun deleteFavoriteCity(favorite: Favorite)
+    suspend fun deleteFavoriteCity(favorite: Favorite?)
 
-    @Query("SELECT * FROM favorite_tbl WHERE City LIKE '%' || :query || '%'")
-    suspend fun searchFavoriteCity(query: String?): MutableList<Favorite>
+    /*@Query("SELECT * FROM favorite_tbl WHERE City LIKE '%' || :query || '%'")
+    suspend fun searchFavoriteCity(query: String?): MutableList<Favorite>?*/
 }

@@ -15,23 +15,23 @@ class WeatherRepository @Inject constructor(
     private val api: WeatherApi,
     private val cityDao: CityDao,
     private val favoriteDao: FavoriteDao) {
-    suspend fun getCurrentData(city: String, appid: String) =  flow { emit(api.getCurrentData(city, appid)) }.flowOn(IO)
+    suspend fun getCurrentData(city: String, appid: String) = flow { emit(api.getCurrentData(city, appid)) }
 
-    suspend fun getHourlyData(city: String, appid: String) = flow { emit(api.getHourlyData(city, appid)) }.flowOn(IO)
+    suspend fun getHourlyData(city: String, appid: String) = flow { emit(api.getHourlyData(city, appid)) }
 
-    suspend fun getDailyData(city: String, appid: String) = flow { emit(api.getDailyData(city, appid)) }.flowOn(IO)
+    suspend fun getDailyData(city: String, appid: String) = flow { emit(api.getDailyData(city, appid)) }
 
     suspend fun getCities() = flow { emit(cityDao.getAllCity()) }.flowOn(IO)
 
     suspend fun upserts(cities: MutableList<City>) = cityDao.upserts(cities)
 
-    suspend fun searchCity(query: String?) = flow { emit(cityDao.search(query)) }.flowOn(IO)
+    suspend fun searchCity(query: String?) = flow { emit(cityDao.search(query)) }
+/*
+    suspend fun searchFavoriteCity(query: String?) = flow { emit(favoriteDao.searchFavoriteCity(query)) }
+*/
+    suspend fun favoriteUpsert(favorite: Favorite) = favoriteDao.upsert(favorite)
 
-    suspend fun searchFavoriteCity(query: String?) = flow { emit(favoriteDao.searchFavoriteCity(query)) }.flowOn(IO)
-
-    suspend fun fInsert(favorite: Favorite) = favoriteDao.upsert(favorite)
-
-    suspend fun getAllCityFavorite() = flow { emit(favoriteDao.getAllCityFavorite()) }.flowOn(IO)
+    suspend fun getAllCityFavorite() = flow { emit(favoriteDao.getAllCityFavorite()) }
 
     suspend fun deleteFavorite(favorite: Favorite) = favoriteDao.deleteFavoriteCity(favorite)
 

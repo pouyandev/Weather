@@ -11,6 +11,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,9 +22,13 @@ import com.example.globalweather.di.application.HiltApplication
 import com.example.globalweather.utils.WeatherState
 import com.example.globalweather.viewModel.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -57,7 +62,6 @@ class SearchFragment : Fragment() {
     private fun init() {
         showLoading()
         cityItemClick()
-
         getAllCity()
         searchCity()
 
@@ -65,9 +69,10 @@ class SearchFragment : Fragment() {
 
     private fun cityItemClick() {
         cityAdapter.setOnItemClickListener {
-            lifecycleScope.launchWhenCreated {
+            lifecycleScope.launchWhenCreated{
                 HiltApplication.cityDetails.storeDetails(it.name)
                 findNavController().navigate(R.id.action_searchFragment_to_weatherFragment)
+
             }
         }
     }
@@ -99,9 +104,9 @@ class SearchFragment : Fragment() {
 
 
     private fun getAllCity() {
-        lifecycleScope.launchWhenCreated {
-            viewModel.cities()
-            viewModel.getAllCity().collectLatest {
+        lifecycleScope.launchWhenCreated{
+            viewModel.handleAllCity()
+            viewModel.allCities.collectLatest {
                 when (it) {
                     is WeatherState.Loading -> showLoading()
                     is WeatherState.Error -> {
@@ -143,7 +148,6 @@ class SearchFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
-
     }
 
 }

@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import coil.load
@@ -28,12 +27,8 @@ import com.example.globalweather.di.application.HiltApplication
 import com.example.globalweather.room.entity.Favorite
 import com.example.globalweather.utils.WeatherState
 import com.example.globalweather.viewModel.WeatherViewModel
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -53,6 +48,7 @@ class WeatherFragment : Fragment() {
     private val hourlyAdapter by lazy { HourlyAdapter() }
     private val dailyAdapter by lazy { DailyAdapter() }
     private var animation: TranslateAnimation? = null
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     val formatter: DateTimeFormatter = DateTimeFormatter
@@ -79,14 +75,15 @@ class WeatherFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun init() {
-        lifecycleScope.launchWhenCreated {
+        lifecycleScope.launchWhenCreated{
             HiltApplication.cityDetails.getCityName().collectLatest {
-                if (it == ""){
+                if (it == "") {
                     findNavController().navigate(R.id.action_weatherFragment_to_searchFragment)
                 }
                 getData(it)
             }
         }
+
 
         showAndHideFab()
         actionSearchAndFavorite()
@@ -99,18 +96,16 @@ class WeatherFragment : Fragment() {
         currentDetail(city)
         forecastHourlyDetail(city)
         forecastDailyDetail(city)
+
     }
 
     private fun actionSearchAndFavorite() {
+
         binding.apply {
             imgSearchMain.setOnClickListener {
-                findNavController().navigate(R.id.action_weatherFragment_to_searchFragment)
-            }
-            imgFavoriteMain.setOnClickListener {
-                viewModel.addFavoriteCity(favorite!!)
-                Snackbar.make(view, "Selected city added successfully", Snackbar.LENGTH_SHORT).show()
             }
             fab.setOnClickListener {
+               viewModel.addFavoriteCity(favorite!!)
                 findNavController().navigate(R.id.action_weatherFragment_to_favoriteFragment)
             }
         }
@@ -152,9 +147,9 @@ class WeatherFragment : Fragment() {
     }
 
     private fun forecastDailyDetail(city: String) {
-        lifecycleScope.launchWhenCreated{
-            viewModel.daily(city)
-            viewModel.getDaily().collectLatest {
+        lifecycleScope.launchWhenCreated {
+            viewModel.handleDaily(city)
+            viewModel.dailyData.collectLatest {
                 when (it) {
                     is WeatherState.Loading -> showLoading()
                     is WeatherState.Error -> {
@@ -177,8 +172,8 @@ class WeatherFragment : Fragment() {
 
     private fun forecastHourlyDetail(city: String) {
         lifecycleScope.launchWhenCreated {
-            viewModel.hourly(city)
-            viewModel.getHourly().collectLatest {
+            viewModel.handleHourly(city)
+            viewModel.hourlyData.collectLatest {
                 when (it) {
                     is WeatherState.Loading -> showLoading()
                     is WeatherState.Error -> {
@@ -201,9 +196,9 @@ class WeatherFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun currentDetail(city: String) {
-        lifecycleScope.launchWhenCreated {
-            viewModel.current(city)
-            viewModel.getCurrent().collectLatest {
+        lifecycleScope.launchWhenCreated{
+            viewModel.handleCurrentData(city)
+            viewModel.currentData.collectLatest {
                 when (it) {
                     is WeatherState.Loading -> showLoading()
                     is WeatherState.Error -> {
@@ -212,19 +207,18 @@ class WeatherFragment : Fragment() {
                     }
                     is WeatherState.SuccessCurrent -> {
                         hideLoading()
-                        if (it.response.isSuccessful) {
-                            binding.apply {
-                                it.response.body()!!.run {
-                                    txtCityName.text = name
-                                    txtDateMain.text =
-                                        Instant.ofEpochSecond(dt.toLong())
-                                            .atZone(ZoneId.systemDefault())
-                                            .toLocalDate()
-                                            .format(
-                                                DateTimeFormatter.ofPattern("EEE, MMM d")
-                                            )
+                        binding.apply {
+                            it.response.body()!!.apply {
+                                txtCityName.text = name
+                                txtDateMain.text =
+                                    Instant.ofEpochSecond(dt.toLong())
+                                        .atZone(ZoneId.systemDefault())
+                                        .toLocalDate()
+                                        .format(
+                                            DateTimeFormatter.ofPattern("EEE, MMM d")
+                                        )
 
-                                    txtTemp.text = (main.temp.roundToInt() - 273).toString() + " \u00B0"
+                                txtTemp.text = (main.temp.roundToInt() - 273).toString() + " \u00B0"
                                     txtDescription.text = weather[0].main
                                     txtFeelsLike.text =
                                         (main.feels_like.roundToInt() - 273).toString() + " \u00B0"
@@ -263,18 +257,18 @@ class WeatherFragment : Fragment() {
                                     }
                                     favorite = Favorite(
                                         id, name, sys.country,
-                                        "http://openweathermap.org/img/w/" + weather[0].icon + ".png",
+                                        iconUrl,
                                         (main.temp.roundToInt() - 273).toString() + " \u00B0"
                                     )
                                 }
                             }
-
-                        }
                     }
 
                     else -> {}
                 }
             }
+
+
         }
     }
 
@@ -312,6 +306,8 @@ class WeatherFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+
+
     }
 
 }

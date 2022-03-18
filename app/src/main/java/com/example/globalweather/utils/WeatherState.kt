@@ -13,7 +13,7 @@ sealed class WeatherState {
     class SuccessHourly(val response: Response<ForecastHourlyRes>) : WeatherState()
     class SearchCity(val response: MutableList<City>) : WeatherState()
     class SearchFavoriteCity(val response: MutableList<Favorite>) : WeatherState()
-    class Error(val error: Throwable) : WeatherState()
+    class Error(val error: String?) : WeatherState()
     object Loading : WeatherState()
     object Empty : WeatherState()
 

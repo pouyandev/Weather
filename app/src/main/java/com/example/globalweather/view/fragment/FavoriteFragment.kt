@@ -27,6 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
 
+
 @AndroidEntryPoint
 class FavoriteFragment : Fragment() {
 
@@ -35,6 +36,7 @@ class FavoriteFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: WeatherViewModel by activityViewModels()
     private val favoriteAdapter by lazy { FavoriteAdapter() }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,16 +58,19 @@ class FavoriteFragment : Fragment() {
 
     private fun init() {
         initRecyclerView()
-        searchFavoriteCity()
         getAllFavoriteCity()
         favoriteAdapter.setOnItemClickListener {
-            lifecycleScope.launchWhenCreated {
+            lifecycleScope.launchWhenCreated{
                 HiltApplication.cityDetails.storeDetails(it.cityName!!.toString())
                 findNavController().navigate(R.id.action_favoriteFragment_to_weatherFragment)
             }
+
+        }
+        binding.imgSearchCity.setOnClickListener {
+            findNavController().navigate(R.id.action_favoriteFragment_to_searchFragment)
         }
     }
-    private fun searchFavoriteCity() {
+/*    private fun searchFavoriteCity() {
         binding.edtSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -74,7 +79,7 @@ class FavoriteFragment : Fragment() {
             override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (charSequence!!.isNotEmpty()) {
                     viewModel.searchFavoriteQuery.value = charSequence.toString()
-                    lifecycleScope.launchWhenCreated {
+                    lifecycleScope.launchWhenCreated{
                         viewModel.searchFavoriteCities().collectLatest {
                             hideLoading()
                             favoriteAdapter.differ.submitList(it)
@@ -89,12 +94,12 @@ class FavoriteFragment : Fragment() {
 
             }
         })
-    }
+    }*/
 
     private fun getAllFavoriteCity() {
-        lifecycleScope.launchWhenCreated {
-            viewModel.favoriteCities()
-                viewModel.getAllFavoriteCity().collectLatest {
+        lifecycleScope.launchWhenCreated{
+            viewModel.handleAllFavoriteCity()
+                viewModel.favoriteCities.collectLatest {
                     when (it) {
                         is WeatherState.Loading -> showLoading()
                         is WeatherState.Error -> {
