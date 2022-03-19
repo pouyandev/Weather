@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -36,6 +38,8 @@ class FavoriteFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: WeatherViewModel by activityViewModels()
     private val favoriteAdapter by lazy { FavoriteAdapter() }
+    lateinit var toggle: ActionBarDrawerToggle
+
 
 
     override fun onCreateView(
@@ -69,33 +73,40 @@ class FavoriteFragment : Fragment() {
         binding.imgSearchCity.setOnClickListener {
             findNavController().navigate(R.id.action_favoriteFragment_to_searchFragment)
         }
+        actionDrawerLayout()
     }
-/*    private fun searchFavoriteCity() {
-        binding.edtSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+    private fun actionDrawerLayout() {
+        toggle =
+            ActionBarDrawerToggle(
+                activity,
+                binding.drawer,
+                R.string.app_name,
+                R.string.app_name
+            )
 
+        binding.apply {
+            imgMenuFavorite.setOnClickListener {
+                openDrawerLayout()
             }
+            weatherNavigation.setNavigationItemSelectedListener  {
+                when(it.itemId){
+                    R.id.searchFragment -> {
 
-            override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (charSequence!!.isNotEmpty()) {
-                    viewModel.searchFavoriteQuery.value = charSequence.toString()
-                    lifecycleScope.launchWhenCreated{
-                        viewModel.searchFavoriteCities().collectLatest {
-                            hideLoading()
-                            favoriteAdapter.differ.submitList(it)
-                        }
+                        true
                     }
-                } else {
-                    getAllFavoriteCity()
+
+                    else -> {false}
                 }
             }
-
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
-        })
-    }*/
-
+        }
+    }
+    private fun openDrawerLayout() {
+        if (binding.drawer.isDrawerOpen(Gravity.LEFT)) {
+            binding.drawer.closeDrawer(Gravity.LEFT)
+            return
+        }
+        binding.drawer.openDrawer(Gravity.LEFT)
+    }
     private fun getAllFavoriteCity() {
         lifecycleScope.launchWhenCreated{
             viewModel.handleAllFavoriteCity()

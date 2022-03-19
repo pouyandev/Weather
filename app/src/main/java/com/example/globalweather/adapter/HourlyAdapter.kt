@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.request.CachePolicy
+import com.example.globalweather.R
 import com.example.globalweather.databinding.ItemHourlyBinding
 import com.example.globalweather.model.constant.ListHourly
 import java.text.SimpleDateFormat
@@ -56,15 +57,45 @@ class HourlyAdapter : RecyclerView.Adapter<HourlyAdapter.HourlyViewHolder>() {
                     txtTimeHourly.text = output.format(date)
                     val dateListWeather: List<String> = dt_txt.split(" ")
                     txtDateHourly.text = dateListWeather[0]
-                    val iconUrl =
-                        "http://openweathermap.org/img/w/" + weather[0].icon + ".png";
+                    val condition = weather[0].icon
 
-                    imgIconHourly.load(iconUrl) {
-                        crossfade(true)
-                        crossfade(100)
-                        allowHardware(true)
-                        allowConversionToBitmap(true)
-                        diskCachePolicy(CachePolicy.ENABLED)
+                    when (condition) {
+
+                        "11d" -> { imgIconHourly.setImageResource(R.drawable.thunderstorm) }
+
+                        "11n" -> { imgIconHourly.setImageResource(R.drawable.thunderstorm) }
+
+                        "01n" -> { imgIconHourly.setImageResource(R.drawable.clear_sky) }
+
+                        "01d" -> { imgIconHourly.setImageResource(R.drawable.clear_sky) }
+
+                        "09d" -> { imgIconHourly.setImageResource(R.drawable.drizzle) }
+
+                        "09n" -> { imgIconHourly.setImageResource(R.drawable.drizzle) }
+
+                        "02d" -> { imgIconHourly.setImageResource(R.drawable.clouds) }
+
+                        "02n" -> { imgIconHourly.setImageResource(R.drawable.clouds) }
+
+                        "03d" -> { imgIconHourly.setImageResource(R.drawable.clouds) }
+
+                        "03n" -> { imgIconHourly.setImageResource(R.drawable.clouds) }
+
+                        "04d" -> { imgIconHourly.setImageResource(R.drawable.clouds) }
+
+                        "04n" -> { imgIconHourly.setImageResource(R.drawable.clouds) }
+
+                        "10d" -> { imgIconHourly.setImageResource(R.drawable.rain) }
+
+                        "10n" -> { imgIconHourly.setImageResource(R.drawable.rain) }                        "10d" -> { imgIconHourly.setImageResource(R.drawable.rain) }
+
+                        "13d" -> { imgIconHourly.setImageResource(R.drawable.snow) }
+
+                        "13n" -> { imgIconHourly.setImageResource(R.drawable.snow) }
+
+                        "50d" -> { imgIconHourly.setImageResource(R.drawable.mist) }
+
+                        "50n" -> { imgIconHourly.setImageResource(R.drawable.mist) }
                     }
                 }
 

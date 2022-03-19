@@ -1,429 +1,428 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/blue"
     android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/empty_page"
-        android:visibility="visible"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/scroll_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_main"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:context=".Views.Activity.MainActivity">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/img_search_main"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_marginTop="@dimen/_25sdp"
-                android:layout_marginStart="@dimen/_20sdp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="@dimen/_5sdp"
-                android:src="@drawable/ic_baseline_menu_24"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txt_date_main"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_31sdp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_12ssp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/img_favorite_main"
-                app:layout_constraintStart_toEndOf="@+id/img_search_main"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Mon,Jun6" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/img_favorite_main"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_marginTop="@dimen/_25sdp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="@dimen/_5sdp"
-                android:layout_marginEnd="@dimen/_20sdp"
-                android:src="@drawable/ic_baseline_favorite_24"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txt_city_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_25sdp"
-                android:layout_marginTop="@dimen/_50sdp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_12ssp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/img_search_main"
-                tools:text="Kyiv" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txt_temp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_25sdp"
-                android:layout_marginTop="@dimen/_50sdp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_55ssp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_city_name"
-                tools:text="28°" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/img_icon_main"
-                android:layout_width="@dimen/_120sdp"
-                android:layout_height="@dimen/_120sdp"
-                android:layout_marginStart="@dimen/_60sdp"
-                app:layout_constraintBottom_toTopOf="@+id/view"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/txt_temp"
-                app:layout_constraintTop_toBottomOf="@+id/txt_date_main" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/img_up_main"
-                android:layout_width="@dimen/_10sdp"
-                android:layout_height="@dimen/_15sdp"
-                android:layout_marginStart="@dimen/_25sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:src="@drawable/ic_up"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_temp"
-                app:tint="@color/gray" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txt_up_main"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_15sdp"
-                android:layout_marginStart="@dimen/_2sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:gravity="center"
-                android:text="@+id/txt_up_main"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_10ssp"
-                app:layout_constraintStart_toEndOf="@+id/img_up_main"
-                app:layout_constraintTop_toBottomOf="@+id/txt_temp"
-                tools:text="31°" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/img_down_main"
-                android:layout_width="@dimen/_10sdp"
-                android:layout_height="@dimen/_15sdp"
-                android:layout_marginStart="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:src="@drawable/ic_down"
-                app:layout_constraintStart_toEndOf="@+id/txt_up_main"
-                app:layout_constraintTop_toBottomOf="@+id/txt_temp"
-                app:tint="@color/gray" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txt_down_main"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_15sdp"
-                android:layout_marginStart="@dimen/_2sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_10ssp"
-                app:layout_constraintStart_toEndOf="@+id/img_down_main"
-                app:layout_constraintTop_toBottomOf="@+id/txt_temp"
-                tools:text="19°" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txt_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_25sdp"
-                android:layout_marginTop="@dimen/_50sdp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_14ssp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/img_up_main"
-                tools:text="Sunny" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txt_feels"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_25sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:text="@string/feels_like"
-                android:textColor="@color/gray"
-                android:textSize="@dimen/_11ssp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_description" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txt_feels_like"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_15sdp"
-                android:layout_marginStart="@dimen/_5sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:textColor="@color/gray"
-                android:textSize="@dimen/_10ssp"
-                app:layout_constraintStart_toEndOf="@+id/txt_feels"
-                app:layout_constraintTop_toBottomOf="@+id/txt_description"
-                tools:text="26°" />
-
-            <View
-                android:id="@+id/view"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/_2sdp"
-                android:layout_marginTop="@dimen/_20sdp"
-                android:background="@color/blue_light"
-                app:layout_constraintBottom_toTopOf="@id/rcl_forecast_hourly"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_feels" />
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rcl_forecast_hourly"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/_110sdp"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:layout_marginBottom="@dimen/_8sdp"
-                app:layout_constraintBottom_toTopOf="@id/view2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view" />
-
-            <View
-                android:id="@+id/view2"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_2sdp"
-                android:layout_marginBottom="@dimen/_3sdp"
-                android:background="@color/blue_light"
-                app:layout_constraintBottom_toTopOf="@id/rcl_forecast_daily"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rcl_forecast_hourly" />
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rcl_forecast_daily"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/_200sdp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rcl_forecast_hourly"
-                app:layout_constraintVertical_bias="0.0" />
+            android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="0dp"
-                android:layout_height="@dimen/_200sdp"
-                android:background="@color/purple"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rcl_forecast_daily">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:context=".Views.Activity.MainActivity">
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/sunrise_main"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/img_menu_main"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
                     android:layout_marginStart="@dimen/_20sdp"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:text="@string/sunrise"
-                    android:textColor="@color/gray"
-                    android:textSize="@dimen/_9ssp"
-                    android:textStyle="bold"
+                    android:layout_marginTop="@dimen/_25sdp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="@dimen/_5sdp"
+                    android:src="@drawable/ic_baseline_menu_24"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txt_sunrise_main"
+                    android:id="@+id/txt_date_main"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_20sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_31sdp"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_11ssp"
+                    android:textSize="@dimen/_12ssp"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/sunrise_main"
-                    tools:text="3:55 am" />
+                    app:layout_constraintEnd_toStartOf="@+id/img_favorite_main"
+                    app:layout_constraintStart_toEndOf="@+id/img_menu_main"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Mon,Jun6" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/sunset_main"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_180sdp"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:text="@string/sunset"
-                    android:textColor="@color/gray"
-                    android:textSize="@dimen/_9ssp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/img_favorite_main"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_marginTop="@dimen/_25sdp"
+                    android:layout_marginEnd="@dimen/_20sdp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="@dimen/_2sdp"
+                    android:src="@drawable/ic_celsius"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txt_sunset_main"
+                    android:id="@+id/txt_city_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_180sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginStart="@dimen/_25sdp"
+                    android:layout_marginTop="@dimen/_50sdp"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_11ssp"
+                    android:textSize="@dimen/_12ssp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/sunset_main"
-                    tools:text="9:13 pm" />
-
+                    app:layout_constraintTop_toBottomOf="@+id/img_menu_main"
+                    tools:text="Kyiv" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/visibility_main"
+                    android:id="@+id/txt_temp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_20sdp"
-                    android:layout_marginTop="@dimen/_30sdp"
-                    android:text="@string/visibility"
+                    android:layout_marginStart="@dimen/_25sdp"
+                    android:layout_marginTop="@dimen/_50sdp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_55ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_city_name"
+                    tools:text="28°" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/img_icon_main"
+                    android:layout_width="@dimen/_120sdp"
+                    android:layout_height="@dimen/_120sdp"
+                    android:layout_marginStart="@dimen/_60sdp"
+                    android:layout_marginEnd="@dimen/_20sdp"
+                    android:padding="@dimen/_10sdp"
+                    app:layout_constraintBottom_toTopOf="@+id/view"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/txt_temp"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_date_main"
+                    tools:src="@drawable/clouds" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/img_up_main"
+                    android:layout_width="@dimen/_10sdp"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_marginStart="@dimen/_25sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:src="@drawable/ic_up"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_temp"
+                    app:tint="@color/gray" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_up_main"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_marginStart="@dimen/_2sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:gravity="center"
+                    android:text="@+id/txt_up_main"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_10ssp"
+                    app:layout_constraintStart_toEndOf="@+id/img_up_main"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_temp"
+                    tools:text="31°" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/img_down_main"
+                    android:layout_width="@dimen/_10sdp"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_marginStart="@dimen/_15sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:src="@drawable/ic_down"
+                    app:layout_constraintStart_toEndOf="@+id/txt_up_main"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_temp"
+                    app:tint="@color/gray" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_down_main"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_marginStart="@dimen/_2sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_10ssp"
+                    app:layout_constraintStart_toEndOf="@+id/img_down_main"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_temp"
+                    tools:text="19°" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_25sdp"
+                    android:layout_marginTop="@dimen/_50sdp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/img_up_main"
+                    tools:text="Sunny" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_feels"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_25sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="@string/feels_like"
                     android:textColor="@color/gray"
-                    android:textSize="@dimen/_9ssp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_sunrise_main" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txt_visibility_main"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_20sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:textColor="@color/white"
                     android:textSize="@dimen/_11ssp"
-                    android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/visibility_main"
-                    tools:text="10%" />
-
+                    app:layout_constraintTop_toBottomOf="@+id/txt_description" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/humidity_main"
+                    android:id="@+id/txt_feels_like"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_180sdp"
-                    android:layout_marginTop="@dimen/_30sdp"
-                    android:text="@string/humidity"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
                     android:textColor="@color/gray"
-                    android:textSize="@dimen/_9ssp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_sunset_main" />
+                    android:textSize="@dimen/_10ssp"
+                    app:layout_constraintStart_toEndOf="@+id/txt_feels"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_description"
+                    tools:text="26°" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txt_humidity_main"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_180sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_11ssp"
-                    android:textStyle="bold"
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_2sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:background="@color/blue_light"
+                    app:layout_constraintBottom_toTopOf="@id/rcl_forecast_hourly"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/humidity_main"
-                    tools:text="42%" />
+                    app:layout_constraintTop_toBottomOf="@+id/txt_feels" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/wind_main"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_20sdp"
-                    android:layout_marginTop="@dimen/_30sdp"
-                    android:text="@string/wind"
-                    android:textColor="@color/gray"
-                    android:textSize="@dimen/_9ssp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_visibility_main" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txt_wind_main"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_20sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_11ssp"
-                    android:textStyle="bold"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcl_forecast_hourly"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_110sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:layout_marginBottom="@dimen/_8sdp"
+                    app:layout_constraintBottom_toTopOf="@id/view2"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/wind_main"
-                    tools:text="11km/h" />
+                    app:layout_constraintTop_toBottomOf="@+id/view" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/pressure_main"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_180sdp"
-                    android:layout_marginTop="@dimen/_30sdp"
-                    android:text="@string/pressure"
-                    android:textColor="@color/gray"
-                    android:textSize="@dimen/_9ssp"
-                    android:textStyle="bold"
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_2sdp"
+                    android:layout_marginBottom="@dimen/_3sdp"
+                    android:background="@color/blue_light"
+                    app:layout_constraintBottom_toTopOf="@id/rcl_forecast_daily"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_humidity_main" />
+                    app:layout_constraintTop_toBottomOf="@+id/rcl_forecast_hourly" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txt_pressure_main"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_180sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_11ssp"
-                    android:textStyle="bold"
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcl_forecast_daily"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_200sdp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/pressure_main"
-                    tools:text="1009 pa" />
+                    app:layout_constraintTop_toBottomOf="@+id/rcl_forecast_hourly"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_200sdp"
+                    android:background="@color/purple"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rcl_forecast_daily">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/sunrise_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_20sdp"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:text="@string/sunrise"
+                        android:textColor="@color/gray"
+                        android:textSize="@dimen/_9ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/txt_sunrise_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_20sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_11ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/sunrise_main"
+                        tools:text="3:55 am" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/sunset_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_180sdp"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:text="@string/sunset"
+                        android:textColor="@color/gray"
+                        android:textSize="@dimen/_9ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/txt_sunset_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_180sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_11ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/sunset_main"
+                        tools:text="9:13 pm" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/visibility_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_20sdp"
+                        android:layout_marginTop="@dimen/_30sdp"
+                        android:text="@string/visibility"
+                        android:textColor="@color/gray"
+                        android:textSize="@dimen/_9ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_sunrise_main" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/txt_visibility_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_20sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_11ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/visibility_main"
+                        tools:text="10%" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/humidity_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_180sdp"
+                        android:layout_marginTop="@dimen/_30sdp"
+                        android:text="@string/humidity"
+                        android:textColor="@color/gray"
+                        android:textSize="@dimen/_9ssp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_sunset_main" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/txt_humidity_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_180sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_11ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/humidity_main"
+                        tools:text="42%" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/wind_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_20sdp"
+                        android:layout_marginTop="@dimen/_30sdp"
+                        android:text="@string/wind"
+                        android:textColor="@color/gray"
+                        android:textSize="@dimen/_9ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_visibility_main" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/txt_wind_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_20sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_11ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/wind_main"
+                        tools:text="11km/h" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/pressure_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_180sdp"
+                        android:layout_marginTop="@dimen/_30sdp"
+                        android:text="@string/pressure"
+                        android:textColor="@color/gray"
+                        android:textSize="@dimen/_9ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_humidity_main" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/txt_pressure_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_180sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_11ssp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/pressure_main"
+                        tools:text="1009 pa" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.core.widget.ContentLoadingProgressBar
-                android:id="@+id/prg_main"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="460dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.core.widget.NestedScrollView>
 
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/prg_main"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.core.widget.NestedScrollView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/weather_navigation"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_favorite_24"
-        app:fabSize="normal"
-        app:layout_behavior="com.support.android.designlibdemo.ScrollAwareFABBehavior"
-        android:visibility="invisible"
-        android:layout_marginBottom="@dimen/_15sdp"
-        android:layout_marginEnd="@dimen/_15sdp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/weather_header"
+        app:menu="@menu/weather_menu" />
+</androidx.drawerlayout.widget.DrawerLayout>
 
 
 

@@ -4,21 +4,20 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.view.animation.TranslateAnimation
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
-import coil.load
-import coil.request.CachePolicy
 import com.example.globalweather.R
 import com.example.globalweather.adapter.DailyAdapter
 import com.example.globalweather.adapter.HourlyAdapter
@@ -47,7 +46,7 @@ class WeatherFragment : Fragment() {
     private val viewModel: WeatherViewModel by activityViewModels()
     private val hourlyAdapter by lazy { HourlyAdapter() }
     private val dailyAdapter by lazy { DailyAdapter() }
-    private var animation: TranslateAnimation? = null
+    lateinit var toggle: ActionBarDrawerToggle
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -75,7 +74,7 @@ class WeatherFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun init() {
-        lifecycleScope.launchWhenCreated{
+        lifecycleScope.launchWhenCreated {
             HiltApplication.cityDetails.getCityName().collectLatest {
                 if (it == "") {
                     findNavController().navigate(R.id.action_weatherFragment_to_searchFragment)
@@ -85,8 +84,8 @@ class WeatherFragment : Fragment() {
         }
 
 
-        showAndHideFab()
-        actionSearchAndFavorite()
+        //showAndHideFab()
+        actionDrawerLayout()
 
 
     }
@@ -99,52 +98,43 @@ class WeatherFragment : Fragment() {
 
     }
 
-    private fun actionSearchAndFavorite() {
+    private fun actionDrawerLayout() {
+        toggle =
+            ActionBarDrawerToggle(
+                activity,
+                binding.drawer,
+                R.string.app_name,
+                R.string.app_name
+            )
 
         binding.apply {
-            imgSearchMain.setOnClickListener {
+            imgMenuMain.setOnClickListener {
+                openDrawerLayout()
             }
-            fab.setOnClickListener {
-               viewModel.addFavoriteCity(favorite!!)
-                findNavController().navigate(R.id.action_weatherFragment_to_favoriteFragment)
-            }
-        }
-    }
+            weatherNavigation.setNavigationItemSelectedListener {
+                when (it.itemId) {
+                    R.id.favoriteFragment -> {
+                        viewModel.addFavoriteCity(favorite!!)
+                        findNavController().navigate(R.id.action_weatherFragment_to_favoriteFragment)
+                        true
+                    }
 
-    private fun showAndHideFab() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            binding.apply {
-                scrollMain.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-                    val x = scrollY - oldScrollY
-                    when {
-                        x > 0 -> {
-                            fabShow(fab)
-                        }
-                        x < 0 -> {
-                            fabHide(fab)
-                        }
-                        else -> {
-
-                        }
+                    else -> {
+                        false
                     }
                 }
             }
         }
     }
 
-    private fun fabShow(fab: View) {
-        animation = TranslateAnimation(0f, 0f, 500f, 0f)
-        animation!!.duration = 500
-        fab.startAnimation(animation)
-        fab.visibility = VISIBLE
+    private fun openDrawerLayout() {
+        if (binding.drawer.isDrawerOpen(Gravity.LEFT)) {
+            binding.drawer.closeDrawer(Gravity.LEFT)
+            return
+        }
+        binding.drawer.openDrawer(Gravity.LEFT)
     }
 
-    private fun fabHide(fab: View) {
-        animation = TranslateAnimation(0f, 0f, 0f, 500f)
-        animation!!.duration = 500
-        fab.startAnimation(animation)
-        fab.visibility = INVISIBLE
-    }
 
     private fun forecastDailyDetail(city: String) {
         lifecycleScope.launchWhenCreated {
@@ -219,47 +209,84 @@ class WeatherFragment : Fragment() {
                                         )
 
                                 txtTemp.text = (main.temp.roundToInt() - 273).toString() + " \u00B0"
-                                    txtDescription.text = weather[0].main
-                                    txtFeelsLike.text =
-                                        (main.feels_like.roundToInt() - 273).toString() + " \u00B0"
+                                txtDescription.text = weather[0].main
 
-                                    binding.txtDownMain.text =
-                                        (main.temp_min.roundToInt() - 273).toString() + " \u00B0"
-                                    binding.txtUpMain.text =
-                                        (main.temp_max.roundToInt() - 273).toString() + " \u00B0"
+                                txtFeelsLike.text =
+                                    (main.feels_like.roundToInt() - 273).toString() + " \u00B0"
 
-                                    val sunriseInstant: Instant = Instant.ofEpochSecond(sys.sunrise.toLong())
+                                binding.txtDownMain.text =
+                                    (main.temp_min.roundToInt() - 273).toString() + " \u00B0"
 
-                                    val sunsetInstant: Instant = Instant.ofEpochSecond(sys.sunset.toLong())
+                                binding.txtUpMain.text =
+                                    (main.temp_max.roundToInt() - 273).toString() + " \u00B0"
 
-                                    txtSunriseMain.text = formatTime(sunriseInstant)
+                                val sunriseInstant: Instant =
+                                    Instant.ofEpochSecond(sys.sunrise.toLong())
 
-                                    txtSunsetMain.text = formatTime(sunsetInstant)
+                                val sunsetInstant: Instant =
+                                    Instant.ofEpochSecond(sys.sunset.toLong())
 
-                                    txtVisibilityMain.text = ((visibility) / 1000).toString() + " km/h"
+                                txtSunriseMain.text = formatTime(sunriseInstant)
 
-                                    txtHumidityMain.text = main.humidity.toString() + " %"
+                                txtSunsetMain.text = formatTime(sunsetInstant)
 
-                                    txtWindMain.text =
-                                        (((wind.speed) * 3.5).roundToInt()).toString() + " km/h"
+                                txtVisibilityMain.text = ((visibility) / 1000).toString() + " km/h"
 
-                                    txtPressureMain.text = main.pressure.toString() + " hPa"
+                                txtHumidityMain.text = main.humidity.toString() + " %"
 
-                                    val iconUrl =
-                                        "http://openweathermap.org/img/w/" + weather[0].icon + ".png"
+                                txtWindMain.text =
+                                    (((wind.speed) * 3.5).roundToInt()).toString() + " km/h"
 
-                                    imgIconMain.load(iconUrl) {
-                                        crossfade(true)
-                                        crossfade(100)
-                                        allowConversionToBitmap(true)
-                                        diskCachePolicy(CachePolicy.ENABLED)
-                                        allowHardware(true)
-                                    }
-                                    favorite = Favorite(
-                                        id, name, sys.country,
-                                        iconUrl,
-                                        (main.temp.roundToInt() - 273).toString() + " \u00B0"
-                                    )
+                                txtPressureMain.text = main.pressure.toString() + " hPa"
+
+                                val condition = weather[0].icon
+
+                                when (condition) {
+
+                                    "11d" -> { imgIconMain.setImageResource(R.drawable.thunderstorm) }
+
+                                    "11n" -> { imgIconMain.setImageResource(R.drawable.thunderstorm) }
+
+                                    "01n" -> { imgIconMain.setImageResource(R.drawable.clear_sky) }
+
+                                    "01d" -> { imgIconMain.setImageResource(R.drawable.clear_sky) }
+
+                                    "09d" -> { imgIconMain.setImageResource(R.drawable.drizzle) }
+
+                                    "09n" -> { imgIconMain.setImageResource(R.drawable.drizzle) }
+
+                                    "02d" -> { imgIconMain.setImageResource(R.drawable.clouds) }
+
+                                    "02n" -> { imgIconMain.setImageResource(R.drawable.clouds) }
+
+                                    "03d" -> { imgIconMain.setImageResource(R.drawable.clouds) }
+
+                                    "03n" -> { imgIconMain.setImageResource(R.drawable.clouds) }
+
+                                    "04d" -> { imgIconMain.setImageResource(R.drawable.clouds) }
+
+                                    "04n" -> { imgIconMain.setImageResource(R.drawable.clouds) }
+
+                                    "10d" -> { imgIconMain.setImageResource(R.drawable.rain) }
+
+                                    "10n" -> { imgIconMain.setImageResource(R.drawable.rain) }
+
+                                    "13d" -> { imgIconMain.setImageResource(R.drawable.snow) }
+
+                                    "13n" -> { imgIconMain.setImageResource(R.drawable.snow) }
+
+                                    "50d" -> { imgIconMain.setImageResource(R.drawable.mist) }
+
+                                    "50n" -> { imgIconMain.setImageResource(R.drawable.mist) }
+
+                                }
+                                val iconUrl = condition
+
+                                favorite = Favorite(
+                                    id, name, sys.country,
+                                    iconUrl,
+                                    (main.temp.roundToInt() - 273).toString() + " \u00B0"
+                                )
                                 }
                             }
                     }

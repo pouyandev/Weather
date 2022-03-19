@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.request.CachePolicy
+import com.example.globalweather.R
 import com.example.globalweather.databinding.ItemDailyBinding
 import com.example.globalweather.model.constant.ListDaily
 import java.time.Instant
@@ -57,18 +58,47 @@ class DailyAdapter() : RecyclerView.Adapter<DailyAdapter.DailyViewHolder>() {
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate()
                         .format(DateTimeFormatter.ofPattern("EEEE"))
-                    val iconUrl =
-                        "http://openweathermap.org/img/w/" + weather[0].icon + ".png"
+                    val condition = weather[0].icon
 
-                    imgIconDaily.load(iconUrl) {
-                        crossfade(true)
-                        crossfade(100)
-                        allowConversionToBitmap(true)
-                        diskCachePolicy(CachePolicy.ENABLED)
-                        allowHardware(true)
+                    when (condition) {
+
+                        "11d" -> { imgIconDaily.setImageResource(R.drawable.thunderstorm) }
+
+                        "11n" -> { imgIconDaily.setImageResource(R.drawable.thunderstorm) }
+
+                        "01n" -> { imgIconDaily.setImageResource(R.drawable.clear_sky) }
+
+                        "01d" -> { imgIconDaily.setImageResource(R.drawable.clear_sky) }
+
+                        "09d" -> { imgIconDaily.setImageResource(R.drawable.drizzle) }
+
+                        "09n" -> { imgIconDaily.setImageResource(R.drawable.drizzle) }
+
+                        "02d" -> { imgIconDaily.setImageResource(R.drawable.clouds) }
+
+                        "02n" -> { imgIconDaily.setImageResource(R.drawable.clouds) }
+
+                        "03d" -> { imgIconDaily.setImageResource(R.drawable.clouds) }
+
+                        "03n" -> { imgIconDaily.setImageResource(R.drawable.clouds) }
+
+                        "04d" -> { imgIconDaily.setImageResource(R.drawable.clouds) }
+
+                        "04n" -> { imgIconDaily.setImageResource(R.drawable.clouds) }
+
+                        "10d" -> { imgIconDaily.setImageResource(R.drawable.rain) }
+
+                        "10n" -> { imgIconDaily.setImageResource(R.drawable.rain) }
+
+                        "13d" -> { imgIconDaily.setImageResource(R.drawable.snow) }
+
+                        "13n" -> { imgIconDaily.setImageResource(R.drawable.snow) }
+
+                        "50d" -> { imgIconDaily.setImageResource(R.drawable.mist) }
+
+                        "50n" -> { imgIconDaily.setImageResource(R.drawable.mist) }
                     }
                 }
-
             }
         }
 

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.request.CachePolicy
+import com.example.globalweather.R
 import com.example.globalweather.databinding.ItemFavoriteBinding
 import com.example.globalweather.room.entity.Favorite
 
@@ -55,12 +56,46 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>
                 txtCityFavorite.text = favorite.cityName
                 txtCountryFavorite.text = favorite.countryName.toString()
                 txtTempFavorite.text = favorite.main!!.toString()
-                imgIconFavorite.load(favorite.weather!!) {
-                    crossfade(true)
-                    crossfade(500)
-                    allowConversionToBitmap(true)
-                    diskCachePolicy(CachePolicy.ENABLED)
-                    allowHardware(true)
+                val condition = favorite.weather
+
+                when (condition) {
+
+                    "11d" -> { imgIconFavorite.setImageResource(R.drawable.thunderstorm) }
+
+                    "11n" -> { imgIconFavorite.setImageResource(R.drawable.thunderstorm) }
+
+                    "01n" -> { imgIconFavorite.setImageResource(R.drawable.clear_sky) }
+
+                    "01d" -> { imgIconFavorite.setImageResource(R.drawable.clear_sky) }
+
+                    "09d" -> { imgIconFavorite.setImageResource(R.drawable.drizzle) }
+
+                    "09n" -> { imgIconFavorite.setImageResource(R.drawable.drizzle) }
+
+                    "02d" -> { imgIconFavorite.setImageResource(R.drawable.clouds) }
+
+                    "02n" -> { imgIconFavorite.setImageResource(R.drawable.clouds) }
+
+                    "03d" -> { imgIconFavorite.setImageResource(R.drawable.clouds) }
+
+                    "03n" -> { imgIconFavorite.setImageResource(R.drawable.clouds) }
+
+                    "04d" -> { imgIconFavorite.setImageResource(R.drawable.clouds) }
+
+                    "04n" -> { imgIconFavorite.setImageResource(R.drawable.clouds) }
+
+                    "10d" -> { imgIconFavorite.setImageResource(R.drawable.rain) }
+
+                    "10n" -> { imgIconFavorite.setImageResource(R.drawable.rain) }
+
+                    "13d" -> { imgIconFavorite.setImageResource(R.drawable.snow) }
+
+                    "13n" -> { imgIconFavorite.setImageResource(R.drawable.snow) }
+
+                    "50d" -> { imgIconFavorite.setImageResource(R.drawable.mist) }
+
+                    "50n" -> { imgIconFavorite.setImageResource(R.drawable.mist) }
+
                 }
 
             }
