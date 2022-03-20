@@ -59,7 +59,6 @@ class DailyAdapter() : RecyclerView.Adapter<DailyAdapter.DailyViewHolder>() {
                         .toLocalDate()
                         .format(DateTimeFormatter.ofPattern("EEEE"))
                     val condition = weather[0].icon
-
                     when (condition) {
 
                         "11d" -> { imgIconDaily.setImageResource(R.drawable.thunderstorm) }

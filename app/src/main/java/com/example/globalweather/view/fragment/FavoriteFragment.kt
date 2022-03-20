@@ -64,7 +64,7 @@ class FavoriteFragment : Fragment() {
         initRecyclerView()
         getAllFavoriteCity()
         favoriteAdapter.setOnItemClickListener {
-            lifecycleScope.launchWhenCreated{
+            viewLifecycleOwner.lifecycleScope.launchWhenCreated{
                 HiltApplication.cityDetails.storeDetails(it.cityName!!.toString())
                 findNavController().navigate(R.id.action_favoriteFragment_to_weatherFragment)
             }
@@ -108,7 +108,7 @@ class FavoriteFragment : Fragment() {
         binding.drawer.openDrawer(Gravity.LEFT)
     }
     private fun getAllFavoriteCity() {
-        lifecycleScope.launchWhenCreated{
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated{
             viewModel.handleAllFavoriteCity()
                 viewModel.favoriteCities.collectLatest {
                     when (it) {

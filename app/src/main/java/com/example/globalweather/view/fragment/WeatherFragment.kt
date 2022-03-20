@@ -1,6 +1,7 @@
 package com.example.globalweather.view.fragment
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -74,7 +75,7 @@ class WeatherFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun init() {
-        lifecycleScope.launchWhenCreated {
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             HiltApplication.cityDetails.getCityName().collectLatest {
                 if (it == "") {
                     findNavController().navigate(R.id.action_weatherFragment_to_searchFragment)
@@ -82,12 +83,7 @@ class WeatherFragment : Fragment() {
                 getData(it)
             }
         }
-
-
-        //showAndHideFab()
         actionDrawerLayout()
-
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -137,7 +133,7 @@ class WeatherFragment : Fragment() {
 
 
     private fun forecastDailyDetail(city: String) {
-        lifecycleScope.launchWhenCreated {
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.handleDaily(city)
             viewModel.dailyData.collectLatest {
                 when (it) {
@@ -161,7 +157,7 @@ class WeatherFragment : Fragment() {
     }
 
     private fun forecastHourlyDetail(city: String) {
-        lifecycleScope.launchWhenCreated {
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.handleHourly(city)
             viewModel.hourlyData.collectLatest {
                 when (it) {
@@ -186,7 +182,7 @@ class WeatherFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun currentDetail(city: String) {
-        lifecycleScope.launchWhenCreated{
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated{
             viewModel.handleCurrentData(city)
             viewModel.currentData.collectLatest {
                 when (it) {
@@ -240,8 +236,8 @@ class WeatherFragment : Fragment() {
                                 txtPressureMain.text = main.pressure.toString() + " hPa"
 
                                 val condition = weather[0].icon
-
                                 when (condition) {
+
 
                                     "11d" -> { imgIconMain.setImageResource(R.drawable.thunderstorm) }
 
@@ -281,12 +277,10 @@ class WeatherFragment : Fragment() {
 
                                 }
                                 val iconUrl = condition
-
                                 favorite = Favorite(
                                     id, name, sys.country,
                                     iconUrl,
-                                    (main.temp.roundToInt() - 273).toString() + " \u00B0"
-                                )
+                                    (main.temp.roundToInt() - 273).toString() + " \u00B0")
                                 }
                             }
                     }

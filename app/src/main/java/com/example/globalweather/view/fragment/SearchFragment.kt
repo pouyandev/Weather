@@ -69,7 +69,7 @@ class SearchFragment : Fragment() {
 
     private fun cityItemClick() {
         cityAdapter.setOnItemClickListener {
-            lifecycleScope.launchWhenCreated{
+            viewLifecycleOwner.lifecycleScope.launchWhenCreated{
                 HiltApplication.cityDetails.storeDetails(it.name)
                 findNavController().navigate(R.id.action_searchFragment_to_weatherFragment)
 
@@ -86,7 +86,7 @@ class SearchFragment : Fragment() {
             override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (charSequence!!.isNotEmpty()) {
                     viewModel.searchQuery.value = charSequence.toString().trim()
-                    lifecycleScope.launchWhenCreated {
+                    viewLifecycleOwner.lifecycleScope.launchWhenCreated {
                         viewModel.searchCities().collectLatest {
                             cityAdapter.differ.submitList(it)
                         }
@@ -104,7 +104,7 @@ class SearchFragment : Fragment() {
 
 
     private fun getAllCity() {
-        lifecycleScope.launchWhenCreated{
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated{
             viewModel.handleAllCity()
             viewModel.allCities.collectLatest {
                 when (it) {

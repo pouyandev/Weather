@@ -58,7 +58,6 @@ class HourlyAdapter : RecyclerView.Adapter<HourlyAdapter.HourlyViewHolder>() {
                     val dateListWeather: List<String> = dt_txt.split(" ")
                     txtDateHourly.text = dateListWeather[0]
                     val condition = weather[0].icon
-
                     when (condition) {
 
                         "11d" -> { imgIconHourly.setImageResource(R.drawable.thunderstorm) }
@@ -87,7 +86,7 @@ class HourlyAdapter : RecyclerView.Adapter<HourlyAdapter.HourlyViewHolder>() {
 
                         "10d" -> { imgIconHourly.setImageResource(R.drawable.rain) }
 
-                        "10n" -> { imgIconHourly.setImageResource(R.drawable.rain) }                        "10d" -> { imgIconHourly.setImageResource(R.drawable.rain) }
+                        "10n" -> { imgIconHourly.setImageResource(R.drawable.rain) }
 
                         "13d" -> { imgIconHourly.setImageResource(R.drawable.snow) }
 

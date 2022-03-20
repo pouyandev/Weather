@@ -57,7 +57,6 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>
                 txtCountryFavorite.text = favorite.countryName.toString()
                 txtTempFavorite.text = favorite.main!!.toString()
                 val condition = favorite.weather
-
                 when (condition) {
 
                     "11d" -> { imgIconFavorite.setImageResource(R.drawable.thunderstorm) }
