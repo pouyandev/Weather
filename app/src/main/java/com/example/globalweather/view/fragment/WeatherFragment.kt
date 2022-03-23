@@ -133,9 +133,8 @@ class WeatherFragment : Fragment() {
 
 
     private fun forecastDailyDetail(city: String) {
-        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.handleDaily(city)
-            viewModel.dailyData.collectLatest {
+            viewModel.dailyData.observe(viewLifecycleOwner) {
                 when (it) {
                     is WeatherState.Loading -> showLoading()
                     is WeatherState.Error -> {
@@ -150,16 +149,15 @@ class WeatherFragment : Fragment() {
 
                     else -> {}
                 }
-            }
+
 
         }
 
     }
 
     private fun forecastHourlyDetail(city: String) {
-        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.handleHourly(city)
-            viewModel.hourlyData.collectLatest {
+            viewModel.hourlyData.observe(viewLifecycleOwner) {
                 when (it) {
                     is WeatherState.Loading -> showLoading()
                     is WeatherState.Error -> {
@@ -174,7 +172,7 @@ class WeatherFragment : Fragment() {
                     else -> {}
                 }
             }
-        }
+
 
 
     }
@@ -182,113 +180,149 @@ class WeatherFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun currentDetail(city: String) {
-        viewLifecycleOwner.lifecycleScope.launchWhenCreated{
-            viewModel.handleCurrentData(city)
-            viewModel.currentData.collectLatest {
-                when (it) {
-                    is WeatherState.Loading -> showLoading()
-                    is WeatherState.Error -> {
-                        hideLoading()
-                        Log.e("TAG", "currentDetail: ${it.error}")
-                    }
-                    is WeatherState.SuccessCurrent -> {
-                        hideLoading()
-                        binding.apply {
-                            it.response.body()!!.apply {
-                                txtCityName.text = name
-                                txtDateMain.text =
-                                    Instant.ofEpochSecond(dt.toLong())
-                                        .atZone(ZoneId.systemDefault())
-                                        .toLocalDate()
-                                        .format(
-                                            DateTimeFormatter.ofPattern("EEE, MMM d")
-                                        )
 
-                                txtTemp.text = (main.temp.roundToInt() - 273).toString() + " \u00B0"
-                                txtDescription.text = weather[0].main
+        viewModel.handleCurrentData(city)
+        viewModel.currentData.observe(viewLifecycleOwner) {
 
-                                txtFeelsLike.text =
-                                    (main.feels_like.roundToInt() - 273).toString() + " \u00B0"
-
-                                binding.txtDownMain.text =
-                                    (main.temp_min.roundToInt() - 273).toString() + " \u00B0"
-
-                                binding.txtUpMain.text =
-                                    (main.temp_max.roundToInt() - 273).toString() + " \u00B0"
-
-                                val sunriseInstant: Instant =
-                                    Instant.ofEpochSecond(sys.sunrise.toLong())
-
-                                val sunsetInstant: Instant =
-                                    Instant.ofEpochSecond(sys.sunset.toLong())
-
-                                txtSunriseMain.text = formatTime(sunriseInstant)
-
-                                txtSunsetMain.text = formatTime(sunsetInstant)
-
-                                txtVisibilityMain.text = ((visibility) / 1000).toString() + " km/h"
-
-                                txtHumidityMain.text = main.humidity.toString() + " %"
-
-                                txtWindMain.text =
-                                    (((wind.speed) * 3.5).roundToInt()).toString() + " km/h"
-
-                                txtPressureMain.text = main.pressure.toString() + " hPa"
-
-                                val condition = weather[0].icon
-                                when (condition) {
-
-
-                                    "11d" -> { imgIconMain.setImageResource(R.drawable.thunderstorm) }
-
-                                    "11n" -> { imgIconMain.setImageResource(R.drawable.thunderstorm) }
-
-                                    "01n" -> { imgIconMain.setImageResource(R.drawable.clear_sky) }
-
-                                    "01d" -> { imgIconMain.setImageResource(R.drawable.clear_sky) }
-
-                                    "09d" -> { imgIconMain.setImageResource(R.drawable.drizzle) }
-
-                                    "09n" -> { imgIconMain.setImageResource(R.drawable.drizzle) }
-
-                                    "02d" -> { imgIconMain.setImageResource(R.drawable.clouds) }
-
-                                    "02n" -> { imgIconMain.setImageResource(R.drawable.clouds) }
-
-                                    "03d" -> { imgIconMain.setImageResource(R.drawable.clouds) }
-
-                                    "03n" -> { imgIconMain.setImageResource(R.drawable.clouds) }
-
-                                    "04d" -> { imgIconMain.setImageResource(R.drawable.clouds) }
-
-                                    "04n" -> { imgIconMain.setImageResource(R.drawable.clouds) }
-
-                                    "10d" -> { imgIconMain.setImageResource(R.drawable.rain) }
-
-                                    "10n" -> { imgIconMain.setImageResource(R.drawable.rain) }
-
-                                    "13d" -> { imgIconMain.setImageResource(R.drawable.snow) }
-
-                                    "13n" -> { imgIconMain.setImageResource(R.drawable.snow) }
-
-                                    "50d" -> { imgIconMain.setImageResource(R.drawable.mist) }
-
-                                    "50n" -> { imgIconMain.setImageResource(R.drawable.mist) }
-
-                                }
-                                val iconUrl = condition
-                                favorite = Favorite(
-                                    id, name, sys.country,
-                                    iconUrl,
-                                    (main.temp.roundToInt() - 273).toString() + " \u00B0")
-                                }
-                            }
-                    }
-
-                    else -> {}
+            when (it) {
+                is WeatherState.Loading -> showLoading()
+                is WeatherState.Error -> {
+                    hideLoading()
+                    Log.e("TAG", "currentDetail: ${it.error}")
                 }
-            }
+                is WeatherState.SuccessCurrent -> {
+                    hideLoading()
+                    binding.apply {
+                        it.response.body()!!.apply {
+                            txtCityName.text = name
+                            txtDateMain.text =
+                                Instant.ofEpochSecond(dt.toLong())
+                                    .atZone(ZoneId.systemDefault())
+                                    .toLocalDate()
+                                    .format(
+                                        DateTimeFormatter.ofPattern("EEE, MMM d")
+                                    )
 
+                            txtTemp.text = (main.temp.roundToInt() - 273).toString() + " \u00B0"
+                            txtDescription.text = weather[0].description
+
+                            txtFeelsLike.text =
+                                (main.feels_like.roundToInt() - 273).toString() + " \u00B0"
+
+                            binding.txtDownMain.text =
+                                (main.temp_min.roundToInt() - 273).toString() + " \u00B0"
+
+                            binding.txtUpMain.text =
+                                (main.temp_max.roundToInt() - 273).toString() + " \u00B0"
+
+                            val sunriseInstant: Instant =
+                                Instant.ofEpochSecond(sys.sunrise.toLong())
+
+                            val sunsetInstant: Instant =
+                                Instant.ofEpochSecond(sys.sunset.toLong())
+
+                            txtSunriseMain.text = formatTime(sunriseInstant)
+
+                            txtSunsetMain.text = formatTime(sunsetInstant)
+
+                            txtVisibilityMain.text = ((visibility) / 1000).toString() + " km/h"
+
+                            txtHumidityMain.text = main.humidity.toString() + " %"
+
+                            txtWindMain.text =
+                                (((wind.speed) * 3.5).roundToInt()).toString() + " km/h"
+
+                            txtPressureMain.text = main.pressure.toString() + " hPa"
+
+                            val condition = weather[0].icon
+                            when (condition) {
+
+
+                                "11d" -> {
+                                    imgIconMain.setImageResource(R.drawable.thunderstorm)
+                                }
+
+                                "11n" -> {
+                                    imgIconMain.setImageResource(R.drawable.thunderstorm)
+                                }
+
+                                "01n" -> {
+                                    imgIconMain.setImageResource(R.drawable.clear_sky)
+                                }
+
+                                "01d" -> {
+                                    imgIconMain.setImageResource(R.drawable.clear_sky)
+                                }
+
+                                "09d" -> {
+                                    imgIconMain.setImageResource(R.drawable.drizzle)
+                                }
+
+                                "09n" -> {
+                                    imgIconMain.setImageResource(R.drawable.drizzle)
+                                }
+
+                                "02d" -> {
+                                    imgIconMain.setImageResource(R.drawable.clouds)
+                                }
+
+                                "02n" -> {
+                                    imgIconMain.setImageResource(R.drawable.clouds)
+                                }
+
+                                "03d" -> {
+                                    imgIconMain.setImageResource(R.drawable.clouds)
+                                }
+
+                                "03n" -> {
+                                    imgIconMain.setImageResource(R.drawable.clouds)
+                                }
+
+                                "04d" -> {
+                                    imgIconMain.setImageResource(R.drawable.clouds)
+                                }
+
+                                "04n" -> {
+                                    imgIconMain.setImageResource(R.drawable.clouds)
+                                }
+
+                                "10d" -> {
+                                    imgIconMain.setImageResource(R.drawable.rain)
+                                }
+
+                                "10n" -> {
+                                    imgIconMain.setImageResource(R.drawable.rain)
+                                }
+
+                                "13d" -> {
+                                    imgIconMain.setImageResource(R.drawable.snow)
+                                }
+
+                                "13n" -> {
+                                    imgIconMain.setImageResource(R.drawable.snow)
+                                }
+
+                                "50d" -> {
+                                    imgIconMain.setImageResource(R.drawable.mist)
+                                }
+
+                                "50n" -> {
+                                    imgIconMain.setImageResource(R.drawable.mist)
+                                }
+
+                            }
+                            val iconUrl = condition
+                            favorite = Favorite(
+                                id, name, weather[0].description,
+                                iconUrl,
+                                (main.temp.roundToInt() - 273).toString() + " \u00B0"
+                            )
+                        }
+                    }
+                }
+
+                else -> {}
+            }
 
         }
     }

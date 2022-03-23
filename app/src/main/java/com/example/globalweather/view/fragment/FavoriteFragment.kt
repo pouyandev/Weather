@@ -108,9 +108,9 @@ class FavoriteFragment : Fragment() {
         binding.drawer.openDrawer(Gravity.LEFT)
     }
     private fun getAllFavoriteCity() {
-        viewLifecycleOwner.lifecycleScope.launchWhenCreated{
+
             viewModel.handleAllFavoriteCity()
-                viewModel.favoriteCities.collectLatest {
+                viewModel.favoriteCities.observe(viewLifecycleOwner) {
                     when (it) {
                         is WeatherState.Loading -> showLoading()
                         is WeatherState.Error -> {
@@ -123,7 +123,7 @@ class FavoriteFragment : Fragment() {
 
                         }
                         else -> {}
-                    }
+
                 }
         }
     }

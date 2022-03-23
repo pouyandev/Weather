@@ -54,7 +54,7 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>
         fun bind(favorite: Favorite) {
             binding.apply {
                 txtCityFavorite.text = favorite.cityName
-                txtCountryFavorite.text = favorite.countryName.toString()
+                txtCountryFavorite.text = favorite.description.toString()
                 txtTempFavorite.text = favorite.main!!.toString()
                 val condition = favorite.weather
                 when (condition) {

@@ -62,7 +62,7 @@
             android:layout_marginStart="@dimen/_8sdp"
             android:layout_marginBottom="@dimen/_5sdp"
             android:textColor="@color/gray"
-            android:textSize="@dimen/_10ssp"
+            android:textSize="@dimen/_9ssp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -104,9 +104,8 @@ class SearchFragment : Fragment() {
 
 
     private fun getAllCity() {
-        viewLifecycleOwner.lifecycleScope.launchWhenCreated{
             viewModel.handleAllCity()
-            viewModel.allCities.collectLatest {
+            viewModel.allCities.observe(viewLifecycleOwner) {
                 when (it) {
                     is WeatherState.Loading -> showLoading()
                     is WeatherState.Error -> {
@@ -123,8 +122,6 @@ class SearchFragment : Fragment() {
                     }
                     else -> {}
                 }
-            }
-
 
         }
     }

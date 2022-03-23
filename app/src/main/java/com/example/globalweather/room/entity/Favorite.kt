@@ -1,5 +1,6 @@
 package com.example.globalweather.room.entity
 
+import android.accounts.AuthenticatorDescription
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -18,8 +19,8 @@ data class Favorite(
     val id: Int?,
     @ColumnInfo(name = "City")
     val cityName: String?,
-    @ColumnInfo(name = "Country")
-    val countryName: String?,
+    @ColumnInfo(name = "Description")
+    val description: String?,
     @ColumnInfo(name = "Icon")
     val weather: String?,
     @ColumnInfo(name = "Temp")

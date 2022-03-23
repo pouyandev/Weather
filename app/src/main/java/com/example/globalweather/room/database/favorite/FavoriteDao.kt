@@ -14,6 +14,4 @@ interface FavoriteDao {
     @Delete
     suspend fun deleteFavoriteCity(favorite: Favorite?)
 
-    /*@Query("SELECT * FROM favorite_tbl WHERE City LIKE '%' || :query || '%'")
-    suspend fun searchFavoriteCity(query: String?): MutableList<Favorite>?*/
 }
