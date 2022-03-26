@@ -9,9 +9,10 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.coroutineScope
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,11 +23,9 @@ import com.example.globalweather.di.application.HiltApplication
 import com.example.globalweather.utils.WeatherState
 import com.example.globalweather.viewModel.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -36,8 +35,9 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
 
     private val binding get() = _binding!!
-    private val viewModel: WeatherViewModel by activityViewModels()
+    private val viewModel: WeatherViewModel by viewModels()
     private val cityAdapter by lazy { CityAdapter() }
+    var job: Job? = null
 
 
     override fun onCreateView(
@@ -65,12 +65,13 @@ class SearchFragment : Fragment() {
         getAllCity()
         searchCity()
 
+
     }
 
     private fun cityItemClick() {
         cityAdapter.setOnItemClickListener {
             viewLifecycleOwner.lifecycleScope.launchWhenCreated{
-                HiltApplication.cityDetails.storeDetails(it.name)
+                HiltApplication.cityDetails.storeDetails(it.name!!)
                 findNavController().navigate(R.id.action_searchFragment_to_weatherFragment)
 
             }
@@ -100,6 +101,7 @@ class SearchFragment : Fragment() {
 
             }
         })
+
     }
 
 

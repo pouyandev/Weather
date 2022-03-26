@@ -1,7 +1,6 @@
 package com.example.globalweather.view.fragment
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -14,7 +13,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -44,7 +43,7 @@ class WeatherFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var favorite: Favorite? = null
-    private val viewModel: WeatherViewModel by activityViewModels()
+    private val viewModel: WeatherViewModel by viewModels()
     private val hourlyAdapter by lazy { HourlyAdapter() }
     private val dailyAdapter by lazy { DailyAdapter() }
     lateinit var toggle: ActionBarDrawerToggle
@@ -132,58 +131,12 @@ class WeatherFragment : Fragment() {
     }
 
 
-    private fun forecastDailyDetail(city: String) {
-            viewModel.handleDaily(city)
-            viewModel.dailyData.observe(viewLifecycleOwner) {
-                when (it) {
-                    is WeatherState.Loading -> showLoading()
-                    is WeatherState.Error -> {
-                        hideLoading()
-                        Log.e("TAG", "forecastDailyDetail: ${it.error}")
-                    }
-                    is WeatherState.SuccessDaily -> {
-                        hideLoading()
-                        initDailyRecyclerView()
-                        dailyAdapter.differ.submitList(it.response.body()!!.list)
-                    }
-
-                    else -> {}
-                }
-
-
-        }
-
-    }
-
-    private fun forecastHourlyDetail(city: String) {
-            viewModel.handleHourly(city)
-            viewModel.hourlyData.observe(viewLifecycleOwner) {
-                when (it) {
-                    is WeatherState.Loading -> showLoading()
-                    is WeatherState.Error -> {
-                        hideLoading()
-                        Log.e("TAG", "forecastHourlyDetail: ${it.error}")
-                    }
-                    is WeatherState.SuccessHourly -> {
-                        hideLoading()
-                        initHourlyRecyclerView()
-                        hourlyAdapter.differ.submitList(it.response.body()!!.list)
-                    }
-                    else -> {}
-                }
-            }
-
-
-
-    }
-
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun currentDetail(city: String) {
 
         viewModel.handleCurrentData(city)
         viewModel.currentData.observe(viewLifecycleOwner) {
-
             when (it) {
                 is WeatherState.Loading -> showLoading()
                 is WeatherState.Error -> {
@@ -203,34 +156,34 @@ class WeatherFragment : Fragment() {
                                         DateTimeFormatter.ofPattern("EEE, MMM d")
                                     )
 
-                            txtTemp.text = (main.temp.roundToInt() - 273).toString() + " \u00B0"
+                            txtTemp.text = (main.temp!!.roundToInt() - 273).toString() + " \u00B0"
                             txtDescription.text = weather[0].description
 
                             txtFeelsLike.text =
-                                (main.feels_like.roundToInt() - 273).toString() + " \u00B0"
+                                (main.feels_like!!.roundToInt() - 273).toString() + " \u00B0"
 
                             binding.txtDownMain.text =
-                                (main.temp_min.roundToInt() - 273).toString() + " \u00B0"
+                                (main.temp_min!!.roundToInt() - 273).toString() + " \u00B0"
 
                             binding.txtUpMain.text =
-                                (main.temp_max.roundToInt() - 273).toString() + " \u00B0"
+                                (main.temp_max!!.roundToInt() - 273).toString() + " \u00B0"
 
                             val sunriseInstant: Instant =
-                                Instant.ofEpochSecond(sys.sunrise.toLong())
+                                Instant.ofEpochSecond(sys.sunrise!!.toLong())
 
                             val sunsetInstant: Instant =
-                                Instant.ofEpochSecond(sys.sunset.toLong())
+                                Instant.ofEpochSecond(sys.sunset!!.toLong())
 
                             txtSunriseMain.text = formatTime(sunriseInstant)
 
                             txtSunsetMain.text = formatTime(sunsetInstant)
 
-                            txtVisibilityMain.text = ((visibility) / 1000).toString() + " km/h"
+                            txtVisibilityMain.text = ((visibility) !!/ 1000).toString() + " km/h"
 
                             txtHumidityMain.text = main.humidity.toString() + " %"
 
                             txtWindMain.text =
-                                (((wind.speed) * 3.5).roundToInt()).toString() + " km/h"
+                                (((wind.speed) !!* 3.5).roundToInt()).toString() + " km/h"
 
                             txtPressureMain.text = main.pressure.toString() + " hPa"
 
@@ -326,6 +279,53 @@ class WeatherFragment : Fragment() {
 
         }
     }
+
+    private fun forecastHourlyDetail(city: String) {
+        viewModel.handleHourly(city)
+        viewModel.hourlyData.observe(viewLifecycleOwner) {
+            when (it) {
+                is WeatherState.Loading -> showLoading()
+                is WeatherState.Error -> {
+                    hideLoading()
+                    Log.e("TAG", "forecastHourlyDetail: ${it.error}")
+                }
+                is WeatherState.SuccessHourly -> {
+                    hideLoading()
+                    initHourlyRecyclerView()
+                    hourlyAdapter.differ.submitList(it.response.body()!!.list)
+                }
+                else -> {}
+            }
+        }
+
+
+
+    }
+
+    private fun forecastDailyDetail(city: String) {
+            viewModel.handleDaily(city)
+            viewModel.dailyData.observe(viewLifecycleOwner) {
+                when (it) {
+                    is WeatherState.Loading -> showLoading()
+                    is WeatherState.Error -> {
+                        hideLoading()
+                        Log.e("TAG", "forecastDailyDetail: ${it.error}")
+                    }
+                    is WeatherState.SuccessDaily -> {
+                        hideLoading()
+                        initDailyRecyclerView()
+                        dailyAdapter.differ.submitList(it.response.body()!!.list)
+                    }
+
+                    else -> {}
+                }
+
+
+        }
+
+    }
+
+
 
 
     private fun initHourlyRecyclerView() {

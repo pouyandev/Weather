@@ -1,8 +1,6 @@
 package com.example.globalweather.view.fragment
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -13,6 +11,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -26,8 +25,6 @@ import com.example.globalweather.utils.WeatherState
 import com.example.globalweather.viewModel.WeatherViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-
 
 
 @AndroidEntryPoint
@@ -36,7 +33,7 @@ class FavoriteFragment : Fragment() {
     private var _binding: FragmentFavoriteBinding? = null
 
     private val binding get() = _binding!!
-    private val viewModel: WeatherViewModel by activityViewModels()
+    private val viewModel: WeatherViewModel by viewModels()
     private val favoriteAdapter by lazy { FavoriteAdapter() }
     lateinit var toggle: ActionBarDrawerToggle
 
@@ -52,16 +49,12 @@ class FavoriteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-         handleDeleteAndInsert(view)
+        init()
+        handleDeleteAndInsert(view)
     }
 
-    override fun onStart() {
-        super.onStart()
-        init()
-    }
 
     private fun init() {
-        initRecyclerView()
         getAllFavoriteCity()
         favoriteAdapter.setOnItemClickListener {
             viewLifecycleOwner.lifecycleScope.launchWhenCreated{
@@ -73,42 +66,15 @@ class FavoriteFragment : Fragment() {
         binding.imgSearchCity.setOnClickListener {
             findNavController().navigate(R.id.action_favoriteFragment_to_searchFragment)
         }
-        actionDrawerLayout()
-    }
-    private fun actionDrawerLayout() {
-        toggle =
-            ActionBarDrawerToggle(
-                activity,
-                binding.drawer,
-                R.string.app_name,
-                R.string.app_name
-            )
 
-        binding.apply {
-            imgMenuFavorite.setOnClickListener {
-                openDrawerLayout()
-            }
-            weatherNavigation.setNavigationItemSelectedListener  {
-                when(it.itemId){
-                    R.id.searchFragment -> {
-
-                        true
-                    }
-
-                    else -> {false}
-                }
-            }
+        binding.imgBackFavorite.setOnClickListener {
+            findNavController().navigate(R.id.action_favoriteFragment_to_weatherFragment)
         }
+
     }
-    private fun openDrawerLayout() {
-        if (binding.drawer.isDrawerOpen(Gravity.LEFT)) {
-            binding.drawer.closeDrawer(Gravity.LEFT)
-            return
-        }
-        binding.drawer.openDrawer(Gravity.LEFT)
-    }
+
+
     private fun getAllFavoriteCity() {
-
             viewModel.handleAllFavoriteCity()
                 viewModel.favoriteCities.observe(viewLifecycleOwner) {
                     when (it) {
@@ -119,8 +85,8 @@ class FavoriteFragment : Fragment() {
                         }
                         is WeatherState.SearchFavoriteCity -> {
                             hideLoading()
+                            initRecyclerView()
                             favoriteAdapter.differ.submitList(it.response)
-
                         }
                         else -> {}
 

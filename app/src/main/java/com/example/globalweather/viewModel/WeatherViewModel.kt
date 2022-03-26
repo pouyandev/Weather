@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.globalweather.di.application.HiltApplication.Companion.AppContext
-import com.example.globalweather.model.CurrentWeatherRes
 import com.example.globalweather.model.constant.City
 import com.example.globalweather.repository.WeatherRepository
 import com.example.globalweather.room.entity.Favorite
@@ -18,10 +17,11 @@ import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
-import retrofit2.Response
 import javax.inject.Inject
 import kotlin.text.Charsets.UTF_8
 
@@ -49,13 +49,9 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     val searchQuery = MutableStateFlow("")
 
 
-    init {
-
-    }
-
     fun convertJsonAndUpsert() = viewModelScope.launch(IO) {
-       async { json() } .await()
-        async { repository.upserts(cities) }.await()
+        json()
+        repository.upserts(cities)
     }
 
 
@@ -69,7 +65,6 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
 
         cities = GsonBuilder().create()
             .fromJson(json, object : TypeToken<MutableList<City>>() {}.type)
-
 
     }
 
@@ -96,7 +91,7 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
         }
     }
 
-    fun handleDaily(city: String) = viewModelScope.launch(IO) {
+    fun handleDaily(city: String) = viewModelScope.launch {
         _dailyData.postValue(WeatherState.Loading)
         repository.getDailyData(city, API_KEY).catch {
             _dailyData.postValue(WeatherState.Error(it.message))
@@ -118,7 +113,7 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     }
 
 
-    fun handleAllCity() = viewModelScope.launch(IO) {
+    fun handleAllCity() = viewModelScope.launch {
         _allCities.postValue(WeatherState.Loading)
         repository.getCities().catch {
             _allCities.postValue(WeatherState.Error(it.message))
@@ -128,7 +123,7 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     }
 
 
-    fun handleAllFavoriteCity() = viewModelScope.launch(IO) {
+    fun handleAllFavoriteCity() = viewModelScope.launch {
         _favoriteCities.postValue(WeatherState.Loading)
         repository.getAllCityFavorite().catch {
             _favoriteCities.postValue(WeatherState.Error(it.message))

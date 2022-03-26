@@ -6,8 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import coil.request.CachePolicy
 import com.example.globalweather.R
 import com.example.globalweather.databinding.ItemFavoriteBinding
 import com.example.globalweather.room.entity.Favorite
@@ -56,8 +54,7 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>
                 txtCityFavorite.text = favorite.cityName
                 txtCountryFavorite.text = favorite.description.toString()
                 txtTempFavorite.text = favorite.main!!.toString()
-                val condition = favorite.weather
-                when (condition) {
+                when (favorite.weather) {
 
                     "11d" -> { imgIconFavorite.setImageResource(R.drawable.thunderstorm) }
 

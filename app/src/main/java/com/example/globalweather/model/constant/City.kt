@@ -1,22 +1,19 @@
 package com.example.globalweather.model.constant
 
 
-import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.globalweather.model.constant.Coord
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = "city_tbl")
 data class City(
     @PrimaryKey(autoGenerate = true)
-    @SerializedName("id") val id: Int,
-    @SerializedName("name") val name: String,
+    @SerializedName("id") val id: Int? = null,
+    @SerializedName("name") val name: String?=null,
     @SerializedName("coord") val coord: Coord,
-    @SerializedName("country") val country: String,
-    @SerializedName("population") val population: Int,
-    @SerializedName("timezone") val timezone: Int,
-    @SerializedName("sunrise") val sunrise: Int,
-    @SerializedName("sunset") val sunset: Int
+    @SerializedName("country") val country: String?=null,
+    @SerializedName("population") val population: Int? = null,
+    @SerializedName("timezone") val timezone: Int? = null,
+    @SerializedName("sunrise") val sunrise: Int? = null,
+    @SerializedName("sunset") val sunset: Int? = null
 )

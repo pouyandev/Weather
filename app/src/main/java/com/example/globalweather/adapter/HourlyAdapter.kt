@@ -6,8 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import coil.request.CachePolicy
+
 import com.example.globalweather.R
 import com.example.globalweather.databinding.ItemHourlyBinding
 import com.example.globalweather.model.constant.ListHourly
@@ -50,15 +49,14 @@ class HourlyAdapter : RecyclerView.Adapter<HourlyAdapter.HourlyViewHolder>() {
         fun bind(res: ListHourly) {
             binding.apply {
                 res.run {
-                    txtTempHourly.text = (main.temp.roundToInt() - 273).toString() + " \u00B0"
+                    txtTempHourly.text = (main.temp!!.roundToInt() - 273).toString() + " \u00B0"
                     val input = SimpleDateFormat("yyyy-MM-dd hh:mm")
                     val output = SimpleDateFormat("h:mm a")
                     val date: Date = input.parse(dt_txt)
                     txtTimeHourly.text = output.format(date)
-                    val dateListWeather: List<String> = dt_txt.split(" ")
+                    val dateListWeather: List<String> = dt_txt!!.split(" ")
                     txtDateHourly.text = dateListWeather[0]
-                    val condition = weather[0].icon
-                    when (condition) {
+                    when (weather[0].icon) {
 
                         "11d" -> { imgIconHourly.setImageResource(R.drawable.thunderstorm) }
 

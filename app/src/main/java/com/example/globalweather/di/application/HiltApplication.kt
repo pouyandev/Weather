@@ -12,13 +12,11 @@ class HiltApplication : Application() {
         super.onCreate()
         AppContext = applicationContext
         cityDetails = CityDetails(AppContext)
-        cities = ArrayList()
     }
 
 
     companion object {
         lateinit var AppContext: Context
-        lateinit var cities: MutableList<City>
         lateinit var cityDetails: CityDetails
     }
 
