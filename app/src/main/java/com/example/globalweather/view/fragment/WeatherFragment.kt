@@ -60,8 +60,6 @@ class WeatherFragment : Fragment() {
     ): View {
         _binding = FragmentWeatherBinding.inflate(inflater, container, false)
         return binding.root
-
-
     }
 
 
@@ -134,9 +132,9 @@ class WeatherFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun currentDetail(city: String) {
-
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
         viewModel.handleCurrentData(city)
-        viewModel.currentData.observe(viewLifecycleOwner) {
+            viewModel.currentData.collectLatest {
             when (it) {
                 is WeatherState.Loading -> showLoading()
                 is WeatherState.Error -> {
@@ -148,8 +146,7 @@ class WeatherFragment : Fragment() {
                     binding.apply {
                         it.response.body()!!.apply {
                             txtCityName.text = name
-                            txtDateMain.text =
-                                Instant.ofEpochSecond(dt.toLong())
+                            txtDateMain.text = Instant.ofEpochSecond(dt.toLong())
                                     .atZone(ZoneId.systemDefault())
                                     .toLocalDate()
                                     .format(
@@ -178,12 +175,12 @@ class WeatherFragment : Fragment() {
 
                             txtSunsetMain.text = formatTime(sunsetInstant)
 
-                            txtVisibilityMain.text = ((visibility) !!/ 1000).toString() + " km/h"
+                            txtVisibilityMain.text = ((visibility)!! / 1000).toString() + " km/h"
 
                             txtHumidityMain.text = main.humidity.toString() + " %"
 
                             txtWindMain.text =
-                                (((wind.speed) !!* 3.5).roundToInt()).toString() + " km/h"
+                                (((wind.speed)!! * 3.5).roundToInt()).toString() + " km/h"
 
                             txtPressureMain.text = main.pressure.toString() + " hPa"
 
@@ -273,38 +270,38 @@ class WeatherFragment : Fragment() {
                         }
                     }
                 }
-
                 else -> {}
+                }
             }
 
         }
     }
 
     private fun forecastHourlyDetail(city: String) {
-        viewModel.handleHourly(city)
-        viewModel.hourlyData.observe(viewLifecycleOwner) {
-            when (it) {
-                is WeatherState.Loading -> showLoading()
-                is WeatherState.Error -> {
-                    hideLoading()
-                    Log.e("TAG", "forecastHourlyDetail: ${it.error}")
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            viewModel.handleHourly(city)
+            viewModel.hourlyData.collectLatest {
+                when (it) {
+                    is WeatherState.Loading -> showLoading()
+                    is WeatherState.Error -> {
+                        hideLoading()
+                        Log.e("TAG", "forecastHourlyDetail: ${it.error}")
+                    }
+                    is WeatherState.SuccessHourly -> {
+                        hideLoading()
+                        initHourlyRecyclerView()
+                        hourlyAdapter.differ.submitList(it.response.body()!!.list)
+                    }
+                    else -> {}
                 }
-                is WeatherState.SuccessHourly -> {
-                    hideLoading()
-                    initHourlyRecyclerView()
-                    hourlyAdapter.differ.submitList(it.response.body()!!.list)
-                }
-                else -> {}
             }
         }
-
-
-
     }
 
     private fun forecastDailyDetail(city: String) {
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.handleDaily(city)
-            viewModel.dailyData.observe(viewLifecycleOwner) {
+            viewModel.dailyData.collectLatest{
                 when (it) {
                     is WeatherState.Loading -> showLoading()
                     is WeatherState.Error -> {
@@ -316,18 +313,11 @@ class WeatherFragment : Fragment() {
                         initDailyRecyclerView()
                         dailyAdapter.differ.submitList(it.response.body()!!.list)
                     }
-
                     else -> {}
                 }
-
-
+            }
         }
-
     }
-
-
-
-
     private fun initHourlyRecyclerView() {
         binding.rclForecastHourly.apply {
             layoutManager = LinearLayoutManager(requireContext(), HORIZONTAL, false)

@@ -2,7 +2,6 @@ package com.example.globalweather.view.fragment
 
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
@@ -10,7 +9,6 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -25,6 +23,7 @@ import com.example.globalweather.utils.WeatherState
 import com.example.globalweather.viewModel.WeatherViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 
 @AndroidEntryPoint
@@ -75,23 +74,26 @@ class FavoriteFragment : Fragment() {
 
 
     private fun getAllFavoriteCity() {
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.handleAllFavoriteCity()
-                viewModel.favoriteCities.observe(viewLifecycleOwner) {
-                    when (it) {
-                        is WeatherState.Loading -> showLoading()
-                        is WeatherState.Error -> {
-                            hideLoading()
-                            Log.e("TAG", "favoriteCity: ${it.error}")
-                        }
-                        is WeatherState.SearchFavoriteCity -> {
-                            hideLoading()
-                            initRecyclerView()
-                            favoriteAdapter.differ.submitList(it.response)
-                        }
-                        else -> {}
+            viewModel.favoriteCities.collectLatest {
+                when (it) {
+                    is WeatherState.Loading -> showLoading()
+                    is WeatherState.Error -> {
+                        hideLoading()
+                        Log.e("TAG", "favoriteCity: ${it.error}")
+                    }
+                    is WeatherState.SearchFavoriteCity -> {
+                        hideLoading()
+                        initRecyclerView()
+                        favoriteAdapter.differ.submitList(it.response)
+                    }
+                    else -> {}
 
                 }
+            }
         }
+
     }
 
     private fun initRecyclerView() {

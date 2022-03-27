@@ -15,6 +15,7 @@ sealed class WeatherState {
     class SearchFavoriteCity(val response: MutableList<Favorite>) : WeatherState()
     class Error(val error: String?) : WeatherState()
     object Loading : WeatherState()
+    object Empty : WeatherState()
 
 
 

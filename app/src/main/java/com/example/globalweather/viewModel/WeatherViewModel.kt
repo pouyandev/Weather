@@ -1,8 +1,5 @@
 package com.example.globalweather.viewModel
 
-
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.globalweather.di.application.HiltApplication.Companion.AppContext
@@ -15,12 +12,8 @@ import com.example.globalweather.utils.WeatherState
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.text.Charsets.UTF_8
@@ -31,25 +24,25 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
 
     private lateinit var cities: MutableList<City>
 
-    private val _currentData = MutableLiveData<WeatherState>()
-    val currentData: LiveData<WeatherState> = _currentData
+    private val _currentData = MutableStateFlow<WeatherState>(WeatherState.Empty)
+    val currentData = _currentData.asStateFlow()
 
-    private val _hourlyData = MutableLiveData<WeatherState>()
-    val hourlyData: LiveData<WeatherState> = _hourlyData
+    private val _hourlyData = MutableStateFlow<WeatherState>(WeatherState.Empty)
+    val hourlyData = _hourlyData.asStateFlow()
 
-    private val _dailyData = MutableLiveData<WeatherState>()
-    val dailyData: LiveData<WeatherState> = _dailyData
+    private val _dailyData = MutableStateFlow<WeatherState>(WeatherState.Empty)
+    val dailyData = _dailyData.asStateFlow()
 
-    private val _allCities = MutableLiveData<WeatherState>()
-    val allCities: LiveData<WeatherState> = _allCities
+    private val _allCities = MutableStateFlow<WeatherState>(WeatherState.Empty)
+    val allCities = _allCities.asStateFlow()
 
-    private val _favoriteCities = MutableLiveData<WeatherState>()
-    val favoriteCities: LiveData<WeatherState> = _favoriteCities
+    private val _favoriteCities = MutableStateFlow<WeatherState>(WeatherState.Empty)
+    val favoriteCities = _favoriteCities.asStateFlow()
 
     val searchQuery = MutableStateFlow("")
 
 
-    fun convertJsonAndUpsert() = viewModelScope.launch(IO) {
+    fun convertJsonAndUpsert() = viewModelScope.launch {
         json()
         repository.upserts(cities)
     }
@@ -69,35 +62,33 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     }
 
     fun handleCurrentData(city: String) = viewModelScope.launch {
-        _currentData.postValue(WeatherState.Loading)
+        _currentData.value = WeatherState.Loading
         repository.getCurrentData(city, API_KEY).catch {
-            _currentData.postValue(WeatherState.Error(it.message))
+            _currentData.value = WeatherState.Error(it.message)
         }.collectLatest {
-            if (it.isSuccessful) {
-                _currentData.postValue(WeatherState.SuccessCurrent(it))
-            }
+            if (it.isSuccessful) { _currentData.value = WeatherState.SuccessCurrent(it) }
         }
     }
 
 
     fun handleHourly(city: String) = viewModelScope.launch {
-        _hourlyData.postValue(WeatherState.Loading)
+        _hourlyData.value = WeatherState.Loading
         repository.getHourlyData(city, API_KEY).catch {
-            _hourlyData.postValue(WeatherState.Error(it.message))
+            _hourlyData.value = WeatherState.Error(it.message)
         }.collectLatest {
             if (it.isSuccessful) {
-                _hourlyData.postValue(WeatherState.SuccessHourly(it))
+                _hourlyData.value = WeatherState.SuccessHourly(it)
             }
         }
     }
 
     fun handleDaily(city: String) = viewModelScope.launch {
-        _dailyData.postValue(WeatherState.Loading)
+        _dailyData.value = WeatherState.Loading
         repository.getDailyData(city, API_KEY).catch {
-            _dailyData.postValue(WeatherState.Error(it.message))
+            _dailyData.value = WeatherState.Error(it.message)
         }.collectLatest {
             if (it.isSuccessful) {
-                _dailyData.postValue(WeatherState.SuccessDaily(it))
+                _dailyData.value  = WeatherState.SuccessDaily(it)
             }
         }
     }
@@ -114,21 +105,21 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
 
 
     fun handleAllCity() = viewModelScope.launch {
-        _allCities.postValue(WeatherState.Loading)
+        _allCities.value = WeatherState.Loading
         repository.getCities().catch {
-            _allCities.postValue(WeatherState.Error(it.message))
+            _allCities.value = WeatherState.Error(it.message)
         }.collectLatest {
-            _allCities.postValue(WeatherState.SearchCity(it!!))
+            _allCities.value = WeatherState.SearchCity(it!!)
         }
     }
 
 
     fun handleAllFavoriteCity() = viewModelScope.launch {
-        _favoriteCities.postValue(WeatherState.Loading)
+        _favoriteCities.value = WeatherState.Loading
         repository.getAllCityFavorite().catch {
-            _favoriteCities.postValue(WeatherState.Error(it.message))
+            _favoriteCities.value = WeatherState.Error(it.message)
         }.collectLatest {
-            _favoriteCities.postValue(WeatherState.SearchFavoriteCity(it!!))
+            _favoriteCities.value = WeatherState.SearchFavoriteCity(it!!)
         }
     }
 

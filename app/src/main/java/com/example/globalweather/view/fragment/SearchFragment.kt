@@ -9,9 +9,7 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -25,9 +23,7 @@ import com.example.globalweather.viewModel.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -106,8 +102,9 @@ class SearchFragment : Fragment() {
 
 
     private fun getAllCity() {
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.handleAllCity()
-            viewModel.allCities.observe(viewLifecycleOwner) {
+            viewModel.allCities.collectLatest {
                 when (it) {
                     is WeatherState.Loading -> showLoading()
                     is WeatherState.Error -> {
@@ -125,7 +122,9 @@ class SearchFragment : Fragment() {
                     else -> {}
                 }
 
+            }
         }
+
     }
 
     private fun initRecyclerView() {
