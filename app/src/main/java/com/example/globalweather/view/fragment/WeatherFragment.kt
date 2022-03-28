@@ -261,10 +261,9 @@ class WeatherFragment : Fragment() {
                                 }
 
                             }
-                            val iconUrl = condition
                             favorite = Favorite(
                                 id, name, weather[0].description,
-                                iconUrl,
+                                condition,
                                 (main.temp.roundToInt() - 273).toString() + " \u00B0"
                             )
                         }

@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.globalweather.model.constant.City
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CityDao {
@@ -13,10 +14,10 @@ interface CityDao {
     suspend fun upserts(cities: MutableList<City>)
 
     @Query("SELECT * FROM city_tbl ORDER BY id DESC")
-    suspend fun getAllCity(): MutableList<City>?
+     fun getAllCity(): Flow<MutableList<City>?>
 
     @Query("SELECT * FROM city_tbl WHERE name LIKE '%' || :query || '%'")
-    suspend fun search(query: String?): MutableList<City>
+     fun search(query: String?): Flow<MutableList<City>?>
 
 
 }

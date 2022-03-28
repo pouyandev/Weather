@@ -2,6 +2,8 @@ package com.example.globalweather.room.database.favorite
 
 import androidx.room.*
 import com.example.globalweather.room.entity.Favorite
+import kotlinx.coroutines.flow.Flow
+
 @Dao
 interface FavoriteDao {
 
@@ -9,7 +11,7 @@ interface FavoriteDao {
     suspend fun upsert(favorite: Favorite?)
 
     @Query("SELECT * FROM favorite_tbl")
-    suspend fun getAllCityFavorite(): MutableList<Favorite>?
+     fun getAllCityFavorite(): Flow<MutableList<Favorite>?>
 
     @Delete
     suspend fun deleteFavoriteCity(favorite: Favorite?)

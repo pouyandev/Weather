@@ -10,14 +10,14 @@ import retrofit2.http.Query
 interface WeatherApi {
 
     @GET("weather?")
-    suspend fun getCurrentData(
+   suspend fun getCurrentData(
         @Query("q") city: String,
         @Query("appid") appid: String
     ): Response<CurrentWeatherRes>
 
 
     @GET("forecast?")
-    suspend fun getHourlyData(
+     suspend fun getHourlyData(
         @Query("q") city: String,
         @Query("appid") appid: String
     ): Response<ForecastHourlyRes>

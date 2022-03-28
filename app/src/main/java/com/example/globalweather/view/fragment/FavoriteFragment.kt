@@ -34,7 +34,7 @@ class FavoriteFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: WeatherViewModel by viewModels()
     private val favoriteAdapter by lazy { FavoriteAdapter() }
-    lateinit var toggle: ActionBarDrawerToggle
+
 
 
 
@@ -48,12 +48,11 @@ class FavoriteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        init()
-        handleDeleteAndInsert(view)
+        init(view)
     }
 
 
-    private fun init() {
+    private fun init(view: View) {
         getAllFavoriteCity()
         favoriteAdapter.setOnItemClickListener {
             viewLifecycleOwner.lifecycleScope.launchWhenCreated{
@@ -65,10 +64,12 @@ class FavoriteFragment : Fragment() {
         binding.imgSearchCity.setOnClickListener {
             findNavController().navigate(R.id.action_favoriteFragment_to_searchFragment)
         }
-
         binding.imgBackFavorite.setOnClickListener {
             findNavController().navigate(R.id.action_favoriteFragment_to_weatherFragment)
         }
+
+        handleDeleteAndInsert(view)
+
 
     }
 
