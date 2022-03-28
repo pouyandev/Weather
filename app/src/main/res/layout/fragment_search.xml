@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/search_icon_favorite_fragment"
             android:layout_width="@dimen/_15sdp"
             android:layout_height="@dimen/_15sdp"
@@ -29,7 +29,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/gray" />
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_search"
             android:layout_width="0dp"
             android:layout_height="0dp"
