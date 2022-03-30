@@ -96,18 +96,18 @@
                     app:layout_constraintTop_toBottomOf="@+id/txt_city_name"
                     tools:text="28°" />
 
-                <com.google.android.material.imageview.ShapeableImageView
+                <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/img_icon_main"
                     android:layout_width="@dimen/_120sdp"
                     android:layout_height="@dimen/_120sdp"
                     android:layout_marginStart="@dimen/_60sdp"
                     android:layout_marginEnd="@dimen/_20sdp"
-                    android:padding="@dimen/_10sdp"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
                     app:layout_constraintBottom_toTopOf="@+id/view"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/txt_temp"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout4"
-                    tools:src="@drawable/clouds" />
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout4" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/img_up_main"

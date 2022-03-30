@@ -57,45 +57,79 @@ class HourlyAdapter : RecyclerView.Adapter<HourlyAdapter.HourlyViewHolder>() {
                     val dateListWeather: List<String> = dt_txt!!.split(" ")
                     txtDateHourly.text = dateListWeather[0]
                     when (weather[0].icon) {
+                        "11d" -> {
+                            imgIconHourly.setAnimation(R.raw.thunderstorm)
+                        }
 
-                        "11d" -> { imgIconHourly.setImageResource(R.drawable.thunderstorm) }
+                        "11n" -> {
+                            imgIconHourly.setAnimation(R.raw.thunderstorm)
+                        }
 
-                        "11n" -> { imgIconHourly.setImageResource(R.drawable.thunderstorm) }
+                        "01n" -> {
+                            imgIconHourly.setAnimation(R.raw.clear_sky_night)
+                        }
 
-                        "01n" -> { imgIconHourly.setImageResource(R.drawable.clear_sky) }
+                        "01d" -> {
+                            imgIconHourly.setAnimation(R.raw.clear_sky)
+                        }
 
-                        "01d" -> { imgIconHourly.setImageResource(R.drawable.clear_sky) }
+                        "09d" -> {
+                            imgIconHourly.setAnimation(R.raw.drizzle)
+                        }
 
-                        "09d" -> { imgIconHourly.setImageResource(R.drawable.drizzle) }
+                        "09n" -> {
+                            imgIconHourly.setAnimation(R.raw.drizzle)
+                        }
 
-                        "09n" -> { imgIconHourly.setImageResource(R.drawable.drizzle) }
+                        "02d" -> {
+                            imgIconHourly.setAnimation(R.raw.cloudy)
+                        }
 
-                        "02d" -> { imgIconHourly.setImageResource(R.drawable.clouds) }
+                        "02n" -> {
+                            imgIconHourly.setAnimation(R.raw.cloudy_night)
+                        }
 
-                        "02n" -> { imgIconHourly.setImageResource(R.drawable.clouds) }
+                        "03d" -> {
+                            imgIconHourly.setAnimation(R.raw.cloudy)
+                        }
 
-                        "03d" -> { imgIconHourly.setImageResource(R.drawable.clouds) }
+                        "03n" -> {
+                            imgIconHourly.setAnimation(R.raw.cloudy_night)
+                        }
 
-                        "03n" -> { imgIconHourly.setImageResource(R.drawable.clouds) }
+                        "04d" -> {
+                            imgIconHourly.setAnimation(R.raw.cloudy)
+                        }
 
-                        "04d" -> { imgIconHourly.setImageResource(R.drawable.clouds) }
+                        "04n" -> {
+                            imgIconHourly.setAnimation(R.raw.cloudy_night)
+                        }
 
-                        "04n" -> { imgIconHourly.setImageResource(R.drawable.clouds) }
+                        "10d" -> {
+                            imgIconHourly.setAnimation(R.raw.rain)
+                        }
 
-                        "10d" -> { imgIconHourly.setImageResource(R.drawable.rain) }
+                        "10n" -> {
+                            imgIconHourly.setAnimation(R.raw.rain_night)
+                        }
 
-                        "10n" -> { imgIconHourly.setImageResource(R.drawable.rain) }
+                        "13d" -> {
+                            imgIconHourly.setAnimation(R.raw.snow)
+                        }
 
-                        "13d" -> { imgIconHourly.setImageResource(R.drawable.snow) }
+                        "13n" -> {
+                            imgIconHourly.setAnimation(R.raw.snow_night)
+                        }
 
-                        "13n" -> { imgIconHourly.setImageResource(R.drawable.snow) }
+                        "50d" -> {
+                            imgIconHourly.setAnimation(R.raw.mist)
+                        }
 
-                        "50d" -> { imgIconHourly.setImageResource(R.drawable.mist) }
-
-                        "50n" -> { imgIconHourly.setImageResource(R.drawable.mist) }
+                        "50n" -> {
+                            imgIconHourly.setAnimation(R.raw.mist)
+                        }
                     }
                 }
-
             }
         }
 

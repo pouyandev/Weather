@@ -56,41 +56,77 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>
                 txtTempFavorite.text = favorite.main!!.toString()
                 when (favorite.weather) {
 
-                    "11d" -> { imgIconFavorite.setImageResource(R.drawable.thunderstorm) }
+                    "11d" -> {
+                        imgIconFavorite.setAnimation(R.raw.thunderstorm)
+                    }
 
-                    "11n" -> { imgIconFavorite.setImageResource(R.drawable.thunderstorm) }
+                    "11n" -> {
+                        imgIconFavorite.setAnimation(R.raw.thunderstorm)
+                    }
 
-                    "01n" -> { imgIconFavorite.setImageResource(R.drawable.clear_sky) }
+                    "01n" -> {
+                        imgIconFavorite.setAnimation(R.raw.clear_sky_night)
+                    }
 
-                    "01d" -> { imgIconFavorite.setImageResource(R.drawable.clear_sky) }
+                    "01d" -> {
+                        imgIconFavorite.setAnimation(R.raw.clear_sky)
+                    }
 
-                    "09d" -> { imgIconFavorite.setImageResource(R.drawable.drizzle) }
+                    "09d" -> {
+                        imgIconFavorite.setAnimation(R.raw.drizzle)
+                    }
 
-                    "09n" -> { imgIconFavorite.setImageResource(R.drawable.drizzle) }
+                    "09n" -> {
+                        imgIconFavorite.setAnimation(R.raw.drizzle)
+                    }
 
-                    "02d" -> { imgIconFavorite.setImageResource(R.drawable.clouds) }
+                    "02d" -> {
+                        imgIconFavorite.setAnimation(R.raw.cloudy)
+                    }
 
-                    "02n" -> { imgIconFavorite.setImageResource(R.drawable.clouds) }
+                    "02n" -> {
+                        imgIconFavorite.setAnimation(R.raw.cloudy_night)
+                    }
 
-                    "03d" -> { imgIconFavorite.setImageResource(R.drawable.clouds) }
+                    "03d" -> {
+                        imgIconFavorite.setAnimation(R.raw.cloudy)
+                    }
 
-                    "03n" -> { imgIconFavorite.setImageResource(R.drawable.clouds) }
+                    "03n" -> {
+                        imgIconFavorite.setAnimation(R.raw.cloudy_night)
+                    }
 
-                    "04d" -> { imgIconFavorite.setImageResource(R.drawable.clouds) }
+                    "04d" -> {
+                        imgIconFavorite.setAnimation(R.raw.cloudy)
+                    }
 
-                    "04n" -> { imgIconFavorite.setImageResource(R.drawable.clouds) }
+                    "04n" -> {
+                        imgIconFavorite.setAnimation(R.raw.cloudy_night)
+                    }
 
-                    "10d" -> { imgIconFavorite.setImageResource(R.drawable.rain) }
+                    "10d" -> {
+                        imgIconFavorite.setAnimation(R.raw.rain)
+                    }
 
-                    "10n" -> { imgIconFavorite.setImageResource(R.drawable.rain) }
+                    "10n" -> {
+                        imgIconFavorite.setAnimation(R.raw.rain_night)
+                    }
 
-                    "13d" -> { imgIconFavorite.setImageResource(R.drawable.snow) }
+                    "13d" -> {
+                        imgIconFavorite.setAnimation(R.raw.snow)
+                    }
 
-                    "13n" -> { imgIconFavorite.setImageResource(R.drawable.snow) }
+                    "13n" -> {
+                        imgIconFavorite.setAnimation(R.raw.snow_night)
+                    }
 
-                    "50d" -> { imgIconFavorite.setImageResource(R.drawable.mist) }
+                    "50d" -> {
+                        imgIconFavorite.setAnimation(R.raw.mist)
+                    }
 
-                    "50n" -> { imgIconFavorite.setImageResource(R.drawable.mist) }
+                    "50n" -> {
+                        imgIconFavorite.setAnimation(R.raw.mist)
+                    }
 
                 }
 

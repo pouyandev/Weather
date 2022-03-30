@@ -53,7 +53,6 @@ class CityAdapter : RecyclerView.Adapter<CityAdapter.CityViewHolder>() {
         fun bind(city: City) {
             binding.apply { txtCityName.text = city.name }
             itemView.setOnClickListener { onItemClickListener?.let { it(city) } }
-        }
-
+         }
         }
     }

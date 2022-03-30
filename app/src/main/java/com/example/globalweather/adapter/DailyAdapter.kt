@@ -60,41 +60,78 @@ class DailyAdapter : RecyclerView.Adapter<DailyAdapter.DailyViewHolder>() {
                         .format(DateTimeFormatter.ofPattern("EEEE"))
                     when (weather[0].icon) {
 
-                        "11d" -> { imgIconDaily.setImageResource(R.drawable.thunderstorm) }
+                        "11d" -> {
+                            imgIconDaily.setAnimation(R.raw.thunderstorm)
+                        }
 
-                        "11n" -> { imgIconDaily.setImageResource(R.drawable.thunderstorm) }
+                        "11n" -> {
+                            imgIconDaily.setAnimation(R.raw.thunderstorm)
+                        }
 
-                        "01n" -> { imgIconDaily.setImageResource(R.drawable.clear_sky) }
+                        "01n" -> {
+                            imgIconDaily.setAnimation(R.raw.clear_sky_night)
+                        }
 
-                        "01d" -> { imgIconDaily.setImageResource(R.drawable.clear_sky) }
+                        "01d" -> {
+                            imgIconDaily.setAnimation(R.raw.clear_sky)
+                        }
 
-                        "09d" -> { imgIconDaily.setImageResource(R.drawable.drizzle) }
+                        "09d" -> {
+                            imgIconDaily.setAnimation(R.raw.drizzle)
+                        }
 
-                        "09n" -> { imgIconDaily.setImageResource(R.drawable.drizzle) }
+                        "09n" -> {
+                            imgIconDaily.setAnimation(R.raw.drizzle)
+                        }
 
-                        "02d" -> { imgIconDaily.setImageResource(R.drawable.clouds) }
+                        "02d" -> {
+                            imgIconDaily.setAnimation(R.raw.cloudy)
+                        }
 
-                        "02n" -> { imgIconDaily.setImageResource(R.drawable.clouds) }
+                        "02n" -> {
+                            imgIconDaily.setAnimation(R.raw.cloudy_night)
+                        }
 
-                        "03d" -> { imgIconDaily.setImageResource(R.drawable.clouds) }
+                        "03d" -> {
+                            imgIconDaily.setAnimation(R.raw.cloudy)
+                        }
 
-                        "03n" -> { imgIconDaily.setImageResource(R.drawable.clouds) }
+                        "03n" -> {
+                            imgIconDaily.setAnimation(R.raw.cloudy_night)
+                        }
 
-                        "04d" -> { imgIconDaily.setImageResource(R.drawable.clouds) }
+                        "04d" -> {
+                            imgIconDaily.setAnimation(R.raw.cloudy)
+                        }
 
-                        "04n" -> { imgIconDaily.setImageResource(R.drawable.clouds) }
+                        "04n" -> {
+                            imgIconDaily.setAnimation(R.raw.cloudy_night)
+                        }
 
-                        "10d" -> { imgIconDaily.setImageResource(R.drawable.rain) }
+                        "10d" -> {
+                            imgIconDaily.setAnimation(R.raw.rain)
+                        }
 
-                        "10n" -> { imgIconDaily.setImageResource(R.drawable.rain) }
+                        "10n" -> {
+                            imgIconDaily.setAnimation(R.raw.rain_night)
+                        }
 
-                        "13d" -> { imgIconDaily.setImageResource(R.drawable.snow) }
+                        "13d" -> {
+                            imgIconDaily.setAnimation(R.raw.snow)
+                        }
 
-                        "13n" -> { imgIconDaily.setImageResource(R.drawable.snow) }
+                        "13n" -> {
+                            imgIconDaily.setAnimation(R.raw.snow_night)
+                        }
 
-                        "50d" -> { imgIconDaily.setImageResource(R.drawable.mist) }
+                        "50d" -> {
+                            imgIconDaily.setAnimation(R.raw.mist)
+                        }
 
-                        "50n" -> { imgIconDaily.setImageResource(R.drawable.mist) }
+                        "50n" -> {
+                            imgIconDaily.setAnimation(R.raw.mist)
+                        }
+
                     }
                 }
             }

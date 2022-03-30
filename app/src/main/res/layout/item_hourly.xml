@@ -18,9 +18,11 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="1pm" />
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/img_icon_hourly"
         android:layout_width="@dimen/_20sdp"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
         android:layout_height="@dimen/_20sdp"
         app:layout_constraintBottom_toTopOf="@+id/txt_temp_hourly"
         app:layout_constraintEnd_toEndOf="parent"

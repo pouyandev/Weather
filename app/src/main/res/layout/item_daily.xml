@@ -18,10 +18,12 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Friday" />
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/img_icon_daily"
         android:layout_width="@dimen/_20sdp"
         android:layout_height="@dimen/_20sdp"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

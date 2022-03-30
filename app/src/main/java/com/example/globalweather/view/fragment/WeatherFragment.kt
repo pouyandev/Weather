@@ -28,6 +28,7 @@ import com.example.globalweather.utils.WeatherState
 import com.example.globalweather.viewModel.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -187,77 +188,76 @@ class WeatherFragment : Fragment() {
                             val condition = weather[0].icon
                             when (condition) {
 
-
                                 "11d" -> {
-                                    imgIconMain.setImageResource(R.drawable.thunderstorm)
+                                    imgIconMain.setAnimation(R.raw.thunderstorm)
                                 }
 
                                 "11n" -> {
-                                    imgIconMain.setImageResource(R.drawable.thunderstorm)
+                                    imgIconMain.setAnimation(R.raw.thunderstorm)
                                 }
 
                                 "01n" -> {
-                                    imgIconMain.setImageResource(R.drawable.clear_sky)
+                                    imgIconMain.setAnimation(R.raw.clear_sky_night)
                                 }
 
                                 "01d" -> {
-                                    imgIconMain.setImageResource(R.drawable.clear_sky)
+                                    imgIconMain.setAnimation(R.raw.clear_sky)
                                 }
 
                                 "09d" -> {
-                                    imgIconMain.setImageResource(R.drawable.drizzle)
+                                    imgIconMain.setAnimation(R.raw.drizzle)
                                 }
 
                                 "09n" -> {
-                                    imgIconMain.setImageResource(R.drawable.drizzle)
+                                    imgIconMain.setAnimation(R.raw.drizzle)
                                 }
 
                                 "02d" -> {
-                                    imgIconMain.setImageResource(R.drawable.clouds)
+                                    imgIconMain.setAnimation(R.raw.cloudy)
                                 }
 
                                 "02n" -> {
-                                    imgIconMain.setImageResource(R.drawable.clouds)
+                                    imgIconMain.setAnimation(R.raw.cloudy_night)
                                 }
 
                                 "03d" -> {
-                                    imgIconMain.setImageResource(R.drawable.clouds)
+                                    imgIconMain.setAnimation(R.raw.cloudy)
                                 }
 
                                 "03n" -> {
-                                    imgIconMain.setImageResource(R.drawable.clouds)
+                                    imgIconMain.setAnimation(R.raw.cloudy_night)
                                 }
 
                                 "04d" -> {
-                                    imgIconMain.setImageResource(R.drawable.clouds)
+                                    imgIconMain.setAnimation(R.raw.cloudy)
                                 }
 
                                 "04n" -> {
-                                    imgIconMain.setImageResource(R.drawable.clouds)
+                                    imgIconMain.setAnimation(R.raw.cloudy_night)
                                 }
 
                                 "10d" -> {
-                                    imgIconMain.setImageResource(R.drawable.rain)
+                                    imgIconMain.setAnimation(R.raw.rain)
                                 }
 
                                 "10n" -> {
-                                    imgIconMain.setImageResource(R.drawable.rain)
+                                    imgIconMain.setAnimation(R.raw.rain_night)
                                 }
 
                                 "13d" -> {
-                                    imgIconMain.setImageResource(R.drawable.snow)
+                                    imgIconMain.setAnimation(R.raw.snow)
                                 }
 
                                 "13n" -> {
-                                    imgIconMain.setImageResource(R.drawable.snow)
+                                    imgIconMain.setAnimation(R.raw.snow_night)
                                 }
 
                                 "50d" -> {
-                                    imgIconMain.setImageResource(R.drawable.mist)
+                                    imgIconMain.setAnimation(R.raw.mist)
                                 }
 
                                 "50n" -> {
-                                    imgIconMain.setImageResource(R.drawable.mist)
+                                    imgIconMain.setAnimation(R.raw.mist)
                                 }
 
                             }
