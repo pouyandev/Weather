@@ -28,7 +28,6 @@ import com.example.globalweather.utils.WeatherState
 import com.example.globalweather.viewModel.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.map
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -44,7 +43,7 @@ class WeatherFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var favorite: Favorite? = null
-    private val viewModel: WeatherViewModel by viewModels()
+    private val viewModel by lazy { viewModels<WeatherViewModel>() }
     private val hourlyAdapter by lazy { HourlyAdapter() }
     private val dailyAdapter by lazy { DailyAdapter() }
     lateinit var toggle: ActionBarDrawerToggle
@@ -108,7 +107,7 @@ class WeatherFragment : Fragment() {
             weatherNavigation.setNavigationItemSelectedListener {
                 when (it.itemId) {
                     R.id.favoriteFragment -> {
-                        viewModel.addFavoriteCity(favorite!!)
+                        viewModel.value.addFavoriteCity(favorite!!)
                         findNavController().navigate(R.id.action_weatherFragment_to_favoriteFragment)
                         true
                     }
@@ -134,8 +133,8 @@ class WeatherFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun currentDetail(city: String) {
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-        viewModel.handleCurrentData(city)
-            viewModel.currentData.collectLatest {
+            viewModel.value.handleCurrentData(city)
+            viewModel.value.currentData.collectLatest {
             when (it) {
                 is WeatherState.Loading -> showLoading()
                 is WeatherState.Error -> {
@@ -278,8 +277,8 @@ class WeatherFragment : Fragment() {
 
     private fun forecastHourlyDetail(city: String) {
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-            viewModel.handleHourly(city)
-            viewModel.hourlyData.collectLatest {
+            viewModel.value.handleHourly(city)
+            viewModel.value.hourlyData.collectLatest {
                 when (it) {
                     is WeatherState.Loading -> showLoading()
                     is WeatherState.Error -> {
@@ -299,8 +298,8 @@ class WeatherFragment : Fragment() {
 
     private fun forecastDailyDetail(city: String) {
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-            viewModel.handleDaily(city)
-            viewModel.dailyData.collectLatest{
+            viewModel.value.handleDaily(city)
+            viewModel.value.dailyData.collectLatest{
                 when (it) {
                     is WeatherState.Loading -> showLoading()
                     is WeatherState.Error -> {

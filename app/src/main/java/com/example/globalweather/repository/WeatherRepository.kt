@@ -17,15 +17,14 @@ class WeatherRepository @Inject constructor(
     private val cityDao: CityDao,
     private val favoriteDao: FavoriteDao) {
 
-    suspend fun getCurrentData(city: String, appid: String) =
-        flow { emit(api.getCurrentData(city, appid)) }
+    suspend fun getCurrentData(city: String, appid: String) = flow { emit(api.getCurrentData(city, appid)) }
 
     suspend fun getHourlyData(city: String, appid: String) =
         flow { emit(api.getHourlyData(city, appid)) }
 
     suspend fun getDailyData(city: String, appid: String) = flow { emit(api.getDailyData(city, appid)) }
 
-    fun getCities() = cityDao.getAllCity()
+    //fun getCities() = cityDao.getAllCity()
 
     suspend fun upserts(cities: MutableList<City>) = cityDao.upserts(cities)
 

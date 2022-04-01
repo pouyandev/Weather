@@ -13,7 +13,6 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,6 +21,10 @@ import kotlin.text.Charsets.UTF_8
 @HiltViewModel
 class WeatherViewModel @Inject constructor(private val repository: WeatherRepository) :
     ViewModel() {
+
+    init {
+        convertJsonAndUpsert()
+    }
 
     private lateinit var cities: MutableList<City>
 
@@ -34,16 +37,15 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     private val _dailyData = MutableStateFlow<WeatherState>(WeatherState.Empty)
     val dailyData = _dailyData.asStateFlow()
 
-    private val _allCities = MutableStateFlow<WeatherState>(WeatherState.Empty)
-    val allCities = _allCities.asStateFlow()
-
     private val _favoriteCities = MutableStateFlow<WeatherState>(WeatherState.Empty)
     val favoriteCities = _favoriteCities.asStateFlow()
 
-    val searchQuery = MutableStateFlow("")
+    private var _searchList = MutableStateFlow<WeatherState>(WeatherState.Empty)
+    var searchList = _searchList.asStateFlow()
 
+    //var searchQuery = ""
 
-    fun convertJsonAndUpsert() = viewModelScope.launch {
+    private fun convertJsonAndUpsert() = viewModelScope.launch {
         json()
         repository.upserts(cities)
     }
@@ -62,17 +64,19 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
 
     }
 
-    fun handleCurrentData(city: String) = viewModelScope.launch {
+    fun handleCurrentData(city: String) = viewModelScope.launch(IO) {
         _currentData.value = WeatherState.Loading
         repository.getCurrentData(city, API_KEY).catch {
             _currentData.value = WeatherState.Error(it.message)
         }.collectLatest {
-            if (it.isSuccessful) { _currentData.value = WeatherState.SuccessCurrent(it) }
+            if (it.isSuccessful) {
+                _currentData.value = WeatherState.SuccessCurrent(it)
+            }
         }
     }
 
 
-    fun handleHourly(city: String) = viewModelScope.launch {
+    fun handleHourly(city: String) = viewModelScope.launch(IO) {
         _hourlyData.value = WeatherState.Loading
         repository.getHourlyData(city, API_KEY).catch {
             _hourlyData.value = WeatherState.Error(it.message)
@@ -83,13 +87,13 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
         }
     }
 
-    fun handleDaily(city: String) = viewModelScope.launch {
+    fun handleDaily(city: String) = viewModelScope.launch(IO) {
         _dailyData.value = WeatherState.Loading
         repository.getDailyData(city, API_KEY).catch {
             _dailyData.value = WeatherState.Error(it.message)
         }.collectLatest {
             if (it.isSuccessful) {
-                _dailyData.value  = WeatherState.SuccessDaily(it)
+                _dailyData.value = WeatherState.SuccessDaily(it)
             }
         }
     }
@@ -105,16 +109,6 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     }
 
 
-    fun handleAllCity() = viewModelScope.launch {
-        _allCities.value = WeatherState.Loading
-        repository.getCities().catch {
-            _allCities.value = WeatherState.Error(it.message)
-        }.collectLatest {
-            _allCities.value = WeatherState.SearchCity(it!!)
-        }
-    }
-
-
     fun handleAllFavoriteCity() = viewModelScope.launch {
         _favoriteCities.value = WeatherState.Loading
         repository.getAllCityFavorite().catch {
@@ -125,14 +119,14 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     }
 
 
-    @ExperimentalCoroutinesApi
-    private fun searchCity() = searchQuery.flatMapLatest {
-        repository.searchCity(it)
+     fun searchCity(searchQuery:String) = viewModelScope.launch {
+        _searchList.value = WeatherState.Loading
+        repository.searchCity(searchQuery).catch {
+            _searchList.value = WeatherState.Error(it.message)
+        }.collectLatest {
+            _searchList.value = WeatherState.SearchQuery(it!!)
+        }
     }
-
-    @ExperimentalCoroutinesApi
-    fun searchCities() = searchCity()
-
 
 
 }

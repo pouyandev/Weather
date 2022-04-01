@@ -7,7 +7,6 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -32,7 +31,7 @@ class FavoriteFragment : Fragment() {
     private var _binding: FragmentFavoriteBinding? = null
 
     private val binding get() = _binding!!
-    private val viewModel: WeatherViewModel by viewModels()
+    private val viewModel by lazy { viewModels<WeatherViewModel>() }
     private val favoriteAdapter by lazy { FavoriteAdapter() }
 
 
@@ -76,8 +75,8 @@ class FavoriteFragment : Fragment() {
 
     private fun getAllFavoriteCity() {
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-            viewModel.handleAllFavoriteCity()
-            viewModel.favoriteCities.collectLatest {
+            viewModel.value.handleAllFavoriteCity()
+            viewModel.value.favoriteCities.collectLatest {
                 when (it) {
                     is WeatherState.Loading -> showLoading()
                     is WeatherState.Error -> {
@@ -105,14 +104,6 @@ class FavoriteFragment : Fragment() {
         }
     }
 
-    private fun showLoading() {
-        binding.prgFavorite.visibility = VISIBLE
-    }
-
-    private fun hideLoading() {
-        binding.prgFavorite.visibility = INVISIBLE
-    }
-
     private fun handleDeleteAndInsert(view: View) {
         val itemTouchHelperCallBack = object : ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP or ItemTouchHelper.DOWN,
@@ -129,10 +120,10 @@ class FavoriteFragment : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val favorite = favoriteAdapter.differ.currentList[position]
-                viewModel.deleteFavoriteCity(favorite)
+                viewModel.value.deleteFavoriteCity(favorite)
                 Snackbar.make(view,"Successfully Deleted Favorite City", Snackbar.LENGTH_SHORT).apply {
                     setAction("Undo"){
-                        viewModel.addFavoriteCity(favorite)
+                        viewModel.value.addFavoriteCity(favorite)
                     }
                     show()
                 }
@@ -141,6 +132,14 @@ class FavoriteFragment : Fragment() {
         ItemTouchHelper(itemTouchHelperCallBack).apply {
             attachToRecyclerView(binding.rclFavorite)
         }
+    }
+
+    private fun showLoading() {
+        binding.prgFavorite.visibility = VISIBLE
+    }
+
+    private fun hideLoading() {
+        binding.prgFavorite.visibility = INVISIBLE
     }
 
     override fun onDestroy() {
