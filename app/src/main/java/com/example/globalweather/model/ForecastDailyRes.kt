@@ -6,8 +6,8 @@ import com.google.gson.annotations.SerializedName
 
 data class ForecastDailyRes(
     @SerializedName("city") val city: City,
-    @SerializedName("cod") val cod: Int?=null,
+    @SerializedName("cod") val cod: Int? = null,
     @SerializedName("message") val message: Double,
-    @SerializedName("cnt") val cnt: Int?=null,
+    @SerializedName("cnt") val cnt: Int? = null,
     @SerializedName("list") val list: MutableList<ListDaily>
 )

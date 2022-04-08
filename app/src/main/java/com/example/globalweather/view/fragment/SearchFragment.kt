@@ -22,7 +22,6 @@ import com.example.globalweather.utils.WeatherState
 import com.example.globalweather.viewModel.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-
 import kotlinx.coroutines.flow.collectLatest
 
 
@@ -46,6 +45,7 @@ class SearchFragment : Fragment() {
     }
 
 
+
     override fun onStart() {
         super.onStart()
         init()
@@ -58,8 +58,6 @@ class SearchFragment : Fragment() {
     private fun init() {
         cityItemClick()
         searchCity()
-
-
     }
 
     private fun cityItemClick() {
@@ -83,24 +81,23 @@ class SearchFragment : Fragment() {
                         viewModel.value.searchCity(charSequence.toString().trim())
                         viewModel.value.searchList.collectLatest {
                             when (it) {
-                                is WeatherState.Loading -> showLoading()
-                                is WeatherState.Error -> {
+                                is WeatherState.LOADING -> showLoading()
+                                is WeatherState.ERROR -> {
                                     hideLoading()
                                     Log.e("TAG", "SearchList: ${it.error}")
                                 }
-                                is WeatherState.SearchQuery -> {
+                                is WeatherState.SUCCESS -> {
                                     hideLoading()
                                     initRecyclerView()
-                                    cityAdapter.differ.submitList(it.response)
+                                    if(binding.edtSearch.text!!.toString().isEmpty()){
+                                        showLoading()
+                                    }
+                                      cityAdapter.differ.submitList(it.data)
                                 }
-
-
                             }
-
-                        } }
+                        }
+                    }
                 }
-
-
             override fun afterTextChanged(p0: Editable?) {
 
             }
@@ -110,7 +107,7 @@ class SearchFragment : Fragment() {
 
     private fun initRecyclerView() {
         binding.rclCities.apply {
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
             adapter = cityAdapter
             hasFixedSize()
         }

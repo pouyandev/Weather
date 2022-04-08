@@ -24,7 +24,6 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
-
 @AndroidEntryPoint
 class FavoriteFragment : Fragment() {
 
@@ -33,8 +32,6 @@ class FavoriteFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel by lazy { viewModels<WeatherViewModel>() }
     private val favoriteAdapter by lazy { FavoriteAdapter() }
-
-
 
 
     override fun onCreateView(
@@ -53,6 +50,7 @@ class FavoriteFragment : Fragment() {
 
     private fun init(view: View) {
         getAllFavoriteCity()
+        handleDeleteAndInsert(view)
         favoriteAdapter.setOnItemClickListener {
             viewLifecycleOwner.lifecycleScope.launchWhenCreated{
                 HiltApplication.cityDetails.storeDetails(it.cityName!!.toString())
@@ -66,10 +64,6 @@ class FavoriteFragment : Fragment() {
         binding.imgBackFavorite.setOnClickListener {
             findNavController().navigate(R.id.action_favoriteFragment_to_weatherFragment)
         }
-
-        handleDeleteAndInsert(view)
-
-
     }
 
 
@@ -78,21 +72,23 @@ class FavoriteFragment : Fragment() {
             viewModel.value.handleAllFavoriteCity()
             viewModel.value.favoriteCities.collectLatest {
                 when (it) {
-                    is WeatherState.Loading -> showLoading()
-                    is WeatherState.Error -> {
+                    is WeatherState.LOADING -> showLoading()
+                    is WeatherState.ERROR -> {
                         hideLoading()
                         Log.e("TAG", "favoriteCity: ${it.error}")
                     }
-                    is WeatherState.SearchFavoriteCity -> {
+                    is WeatherState.SUCCESS -> {
                         hideLoading()
                         initRecyclerView()
-                        favoriteAdapter.differ.submitList(it.response)
+                        if(it.data!!.isEmpty()){
+                            showLoading()
+                        }
+                        favoriteAdapter.differ.submitList(it.data)
                     }
-                    else -> {}
-
                 }
             }
         }
+
 
     }
 
@@ -136,10 +132,12 @@ class FavoriteFragment : Fragment() {
 
     private fun showLoading() {
         binding.prgFavorite.visibility = VISIBLE
+        binding.rclFavorite.visibility = INVISIBLE
     }
 
     private fun hideLoading() {
         binding.prgFavorite.visibility = INVISIBLE
+        binding.rclFavorite.visibility = VISIBLE
     }
 
     override fun onDestroy() {

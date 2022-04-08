@@ -1,10 +1,7 @@
 package com.example.globalweather.view.activity
 
 import android.os.Bundle
-import android.view.Gravity
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.globalweather.R
 import com.example.globalweather.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 

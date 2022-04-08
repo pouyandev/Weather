@@ -1,7 +1,6 @@
 package com.example.globalweather.repository
 
 
-
 import com.example.globalweather.model.constant.City
 import com.example.globalweather.network.WeatherApi
 import com.example.globalweather.room.database.city.CityDao
@@ -19,12 +18,9 @@ class WeatherRepository @Inject constructor(
 
     suspend fun getCurrentData(city: String, appid: String) = flow { emit(api.getCurrentData(city, appid)) }
 
-    suspend fun getHourlyData(city: String, appid: String) =
-        flow { emit(api.getHourlyData(city, appid)) }
+    suspend fun getHourlyData(city: String, appid: String) = flow { emit(api.getHourlyData(city, appid)) }
 
     suspend fun getDailyData(city: String, appid: String) = flow { emit(api.getDailyData(city, appid)) }
-
-    //fun getCities() = cityDao.getAllCity()
 
     suspend fun upserts(cities: MutableList<City>) = cityDao.upserts(cities)
 

@@ -6,4 +6,5 @@ object Constants {
     const val JSON_FILE = "city_ir.json"
     const val PREFERENCES_NAME = "city_name_preferences"
     const val PREFERENCES_KEY = "CITY_NAME"
+    const val CHANNEL_ID = "WeatherApp"
 }

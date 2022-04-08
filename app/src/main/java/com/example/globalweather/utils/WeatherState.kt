@@ -1,23 +1,17 @@
 package com.example.globalweather.utils
 
-import com.example.globalweather.model.CurrentWeatherRes
-import com.example.globalweather.model.ForecastDailyRes
-import com.example.globalweather.model.ForecastHourlyRes
-import com.example.globalweather.model.constant.City
-import com.example.globalweather.room.entity.Favorite
-import retrofit2.Response
-
-sealed class WeatherState {
-    class SuccessCurrent(val response: Response<CurrentWeatherRes>) : WeatherState()
-    class SuccessDaily(val response: Response<ForecastDailyRes>) : WeatherState()
-    class SuccessHourly(val response: Response<ForecastHourlyRes>) : WeatherState()
-    class SearchFavoriteCity(val response: MutableList<Favorite>) : WeatherState()
-    class SearchQuery(val response: MutableList<City>) : WeatherState()
-    class Error(val error: String?) : WeatherState()
-    object Loading : WeatherState()
-    object Empty : WeatherState()
 
 
+sealed class WeatherState<T>(
+    val data: T? = null,
+    val error: String? = null
+) {
 
+    class SUCCESS<T>(data: T) : WeatherState<T>(data)
+    class LOADING<T> : WeatherState<T>()
+    class ERROR<T>(throwable: String?, data: T? = null) : WeatherState<T>(data, throwable)
 }
+
+
+
 

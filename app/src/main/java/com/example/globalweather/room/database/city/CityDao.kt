@@ -13,11 +13,6 @@ interface CityDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upserts(cities: MutableList<City>)
 
-/*    @Query("SELECT * FROM city_tbl")
-    fun getAllCity(): Flow<MutableList<City>?>*/
-
     @Query("SELECT * FROM city_tbl WHERE name LIKE '%' || :query || '%'")
     fun search(query: String?): Flow<MutableList<City>?>
-
-
 }

@@ -7,9 +7,9 @@ import com.google.gson.annotations.SerializedName
 
 data class ForecastHourlyRes(
 
-    @SerializedName("cod") val cod: Int?=null,
-    @SerializedName("message") val message: Int?=null,
-    @SerializedName("cnt") val cnt: Int?=null,
+    @SerializedName("cod") val cod: Int? = null,
+    @SerializedName("message") val message: Int? = null,
+    @SerializedName("cnt") val cnt: Int? = null,
     @SerializedName("list") val list: MutableList<ListHourly>,
     @SerializedName("city") val city: City
 
